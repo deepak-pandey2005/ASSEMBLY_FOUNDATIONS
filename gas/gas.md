@@ -1,2 +1,13 @@
 # as -gstabs -o add.o add.s
-# ld add add.o 
+# ld -o add add.o 
+
+
+
+# gdb codes
+gdb -q add
+
+break *_start
+
+next 
+
+info registers
