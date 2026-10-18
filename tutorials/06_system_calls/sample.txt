@@ -1,0 +1,2 @@
+This is a test file read by cat_file.asm in 64-bit Assembly!
+Kernel syscalls make low-level I/O direct and blazing fast.
