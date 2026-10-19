@@ -1,17 +1,17 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across 22 progressive modules from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX vectorization, hardware atomics, FFI interop, binary security, and bare-metal bootloaders.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **28 progressive modules** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, and kernel high-resolution timers.
 
 ---
 
-## 🗺️ Complete Curriculum Matrix
+## 🗺️ Complete 28-Module Curriculum Matrix
 
 ### Part I: Core Architecture & Assembly Language Fundamentals
 
 | Module | Title | Primary Syntax | Key Concepts | Verified Programs |
 |---|---|---|---|---|
 | **01** | [Fundamentals & Architecture](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/01_fundamentals/README.md) | NASM 64-bit | CPU instruction cycle, Little-Endian byte order, ELF format | [`hello_64.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/01_fundamentals/hello_64.asm), [`minimal_exit.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/01_fundamentals/minimal_exit.asm) |
-| **02** | [Registers & Memory Addressing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/README.md) | Intel & AT&T | 8/16/32/64-bit subregisters, zero-extension gotcha, `Base + Index*Scale + Disp` | [`addressing_modes.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/addressing_modes.asm), [`data_sections.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/data_sections.asm) |
+| **02** | [Registers & Memory Addressing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/README.md) | Intel & AT&T | 8/16/32/64-bit subregisters, zero-extension gotcha, `.data` vs `.bss` vs `.rodata`, `Base + Index*Scale + Disp` | [`addressing_modes.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/addressing_modes.asm), [`data_sections.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/data_sections.asm) |
 | **03** | [Arithmetic & Bitwise Logic](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/03_arithmetic_and_logic/README.md) | NASM 64-bit | `ADC`, `SBB`, `IMUL`, `IDIV`, `SHL`, `SAR`, CPU RFLAGS (`ZF`, `CF`, `OF`, `SF`) | [`arithmetic.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/03_arithmetic_and_logic/arithmetic.asm), [`bitwise.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/03_arithmetic_and_logic/bitwise.asm) |
 | **04** | [Control Flow & Branching](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/README.md) | NASM 64-bit | `CMP`, `TEST`, signed (`JG`/`JL`) vs unsigned (`JA`/`JB`), loops, branches | [`branches.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/branches.asm), [`loop_sum.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/loop_sum.asm) |
 | **05** | [Call Stack & Functions (ABI)](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/05_stack_and_functions/README.md) | NASM 64-bit | System V AMD64 ABI, register arguments, stack frames, 16-byte alignment | [`function_call.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/05_stack_and_functions/function_call.asm), [`stack_frame.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/05_stack_and_functions/stack_frame.asm) |
@@ -49,11 +49,24 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 
 ---
 
+### Part IV: Hardware Telemetry, OS Signals, Math & Systems Mastery
+
+| Module | Title | Primary Focus | Key Concepts | Verified Programs |
+|---|---|---|---|---|
+| **23** | [CPU Telemetry & Benchmarking](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/23_cpu_telemetry_and_benchmarking/README.md) | Hardware Telemetry | `CPUID` vendor string extraction (`GenuineIntel`/`AuthenticAMD`), `RDTSC`/`RDTSCP` cycle benchmarking | [`cpu_telemetry.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/23_cpu_telemetry_and_benchmarking/cpu_telemetry.asm) |
+| **24** | [Linux Signals & Exceptions](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/24_linux_signals_and_exceptions/README.md) | OS Interrupts | Asynchronous signals, `sys_rt_sigaction` (13), signal context, `sys_rt_sigreturn` (15) trampoline | [`signal_handler.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/24_linux_signals_and_exceptions/signal_handler.asm) |
+| **25** | [x87 FPU Floating-Point Math](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/25_x87_fpu_floating_point/README.md) | FPU Stack | 80-bit IEEE-754 precision, `ST(0)` stack, `fsqrt`, `fldpi`, `fsin`, fixed-point ASCII formatting | [`fpu_math.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/25_x87_fpu_floating_point/fpu_math.asm) |
+| **26** | [Terminal Graphics & Raw I/O](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/26_terminal_graphics_and_raw_io/README.md) | Direct TTY Control | Canonical vs raw terminal mode, ANSI escape sequences (colors, cursor positioning, screen clears) | [`ansi_canvas.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/26_terminal_graphics_and_raw_io/ansi_canvas.asm) |
+| **27** | [Minimalist ELF Golfing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/README.md) | Binary Optimization | Handcrafted 127-byte executable, raw `nasm -f bin`, ELF header + Program header overlap, zero compiler bloat | [`tiny_golf.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/tiny_golf.asm) |
+| **28** | [Kernel Timers & Nanosleep](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/README.md) | OS Scheduling | Scheduler yielding vs busy spinning, `struct timespec` (sec & nsec), `sys_nanosleep` (35) | [`precise_sleep.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/precise_sleep.asm) |
+
+---
+
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 22 tutorial programs
-make test         # Runs automated unit tests for all modules
+make all          # Compiles and links all 28 tutorial programs
+make test         # Runs automated unit tests for all 28 modules
 make test-network # Boots pure assembly HTTP server and curls it via localhost
 make clean        # Cleans binaries, objects, and generated sound/image artifacts
 ```

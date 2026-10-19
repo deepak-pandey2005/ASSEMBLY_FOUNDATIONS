@@ -1,24 +1,24 @@
 # Assembly Foundations 🏛️⚡
 
-> A comprehensive, hands-on, step-by-step tutorial curriculum and low-level systems library covering x86 and x86-64 assembly, Linux OS internals, raw TCP networking, pixel graphics, data encoding, bare-metal OS bootloaders, AVX2 SIMD vectorization, hardware atomics, C/Python FFI interop, cryptography, ELF internals, audio synthesis, and binary security.
+> A comprehensive, hands-on, step-by-step tutorial curriculum, low-level systems reference library, and full-scale real-world project suite covering x86 and x86-64 assembly, Linux OS internals, raw TCP networking, pixel graphics, data encoding, bare-metal OS bootloaders, AVX2 SIMD vectorization, hardware atomics, C/Python FFI interop, cryptography, ELF internals, audio synthesis, binary security, CPU telemetry, signal handling, x87 FPU math, ANSI terminal control, ELF golfing, and kernel high-resolution timers.
 
 ---
 
 ## 🚀 Quick Start
 
-Build and test all 22 modules immediately with a single command:
+Build and test all 28 guided modules and 5 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 22 tutorial programs and advanced systems
+# Build all 28 tutorial programs and 5 standalone projects
 make all
 
-# Run the automated verification test suite across all 22 modules
+# Run the automated verification test suite across everything
 make test
 
-# Test the pure assembly HTTP web server
+# Test the pure assembly HTTP web server daemon
 make test-network
 ```
 
@@ -29,7 +29,21 @@ make debug
 
 ---
 
-## 🗺️ Step-by-Step Curriculum
+## 🏗️ Standalone Assembly Projects
+
+These are complete, full-scale applications written entirely in x86-64 assembly with **zero external C runtime** dependencies. Each project has its own dedicated directory, documentation, and independent `Makefile`:
+
+| Project | Name & Directory | Key Features | Standalone Build |
+|---|---|---|---|
+| **01** | [**Interactive Terminal Snake Game**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/01_interactive_snake_game/README.md) | Non-canonical unbuffered raw terminal I/O via `sys_ioctl`, ANSI color engine, circular snake segment tracking, real-time keyboard handling (`W`/`A`/`S`/`D`), food collision, wall collisions | `cd projects/01_interactive_snake_game && make && ./snake` |
+| **02** | [**HTTP/1.1 Server Daemon**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/02_http_server_daemon/README.md) | Multi-route web server (`/`, `/api/status`, 404), `SO_REUSEADDR` socket options, HTTP request header parsing, JSON and HTML response streaming | `cd projects/02_http_server_daemon && make test` |
+| **03** | [**Polyphonic WAV Synthesizer**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/03_wav_audio_generator/README.md) | 44-byte dynamic RIFF/WAVE header generator, 44.1kHz 16-bit stereo PCM audio engine, dual-tone harmonic chord synthesis with ADSR exponential amplitude decay envelope | `cd projects/03_wav_audio_generator && make run` |
+| **04** | [**3D Sphere Raytracer**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/04_raytracer_ppm/README.md) | Mathematical primary ray generation, vector dot products, quadratic ray-sphere intersection solver, Lambertian diffuse surface lighting with directional light source, Netpbm PPM renderer | `cd projects/04_raytracer_ppm && make run` |
+| **05** | [**Streaming Base64 CLI Converter**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/05_base64_file_converter/README.md) | Streaming 4KB block disk buffer I/O, 24-bit to 4x6-bit Base64 bit alignment, automated MIME 76-column line-wrapping, tail padding (`=`/`==`) | `cd projects/05_base64_file_converter && make test` |
+
+---
+
+## 🗺️ Step-by-Step Curriculum (28 Modules)
 
 ### Part I: Core Architecture & Assembly Language Fundamentals
 
@@ -74,6 +88,19 @@ make debug
 
 ---
 
+### Part IV: Hardware Telemetry, OS Signals, Math & Systems Mastery
+
+| Module | Topic | Core Takeaways | Code Examples |
+|---|---|---|---|
+| **23** | [**CPU Telemetry & Benchmarking**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/23_cpu_telemetry_and_benchmarking/README.md) | Hardware Telemetry, `CPUID` vendor string extraction (`GenuineIntel`/`AuthenticAMD`), `RDTSC`/`RDTSCP` cycle latency benchmarking | [`cpu_telemetry.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/23_cpu_telemetry_and_benchmarking/cpu_telemetry.asm) |
+| **24** | [**Linux Signals & Exceptions**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/24_linux_signals_and_exceptions/README.md) | OS Interrupts, asynchronous signals, `sys_rt_sigaction` (13), signal context, `sys_rt_sigreturn` (15) trampoline | [`signal_handler.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/24_linux_signals_and_exceptions/signal_handler.asm) |
+| **25** | [**x87 FPU Floating-Point Math**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/25_x87_fpu_floating_point/README.md) | FPU Stack, 80-bit IEEE-754 precision, `ST(0)` stack, `fsqrt`, `fldpi`, `fsin`, fixed-point ASCII formatting | [`fpu_math.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/25_x87_fpu_floating_point/fpu_math.asm) |
+| **26** | [**Terminal Graphics & Raw I/O**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/26_terminal_graphics_and_raw_io/README.md) | Direct TTY Control, canonical vs raw terminal mode, ANSI escape sequences (colors, cursor positioning, screen clears) | [`ansi_canvas.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/26_terminal_graphics_and_raw_io/ansi_canvas.asm) |
+| **27** | [**Minimalist ELF Golfing**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/README.md) | Binary Optimization, handcrafted 127-byte executable, raw `nasm -f bin`, ELF header + Program header overlap, zero compiler bloat | [`tiny_golf.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/tiny_golf.asm) |
+| **28** | [**Kernel Timers & Nanosleep**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/README.md) | OS Scheduling, scheduler yielding vs busy spinning, `struct timespec` (sec & nsec), `sys_nanosleep` (35) | [`precise_sleep.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/precise_sleep.asm) |
+
+---
+
 ## 📖 Reference Library & Cheat Sheets
 
 - 📑 [**Complete Instruction Reference**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/docs/reference/instructions.md): Data movement, arithmetic, logic, jumps, and block string instructions.
@@ -89,10 +116,16 @@ make debug
 ```text
 ASSEMBLY_FOUNDATIONS/
 ├── Makefile                               # Universal build, test, and debug runner
-├── ROADMAP.md                             # 22-Module Curriculum overview & learning progression
+├── ROADMAP.md                             # 28-Module Curriculum overview & learning progression
 ├── readme.md                              # Main documentation hub
 ├── docs/reference/                        # Architecture & syscall encyclopedias
 ├── cheatsheets/                           # GDB & Syntax quick-reference guides
+├── projects/                              # Full-Scale Standalone Assembly Projects
+│   ├── 01_interactive_snake_game/         # Terminal Snake game with raw IO & ANSI graphics
+│   ├── 02_http_server_daemon/             # Multi-client HTTP daemon with routing & JSON
+│   ├── 03_wav_audio_generator/            # 16-bit stereo polyphonic WAV audio synthesizer
+│   ├── 04_raytracer_ppm/                  # 3D sphere raytracer with diffuse light shading
+│   └── 05_base64_file_converter/          # Stream-buffered binary-to-Base64 CLI converter
 ├── tutorials/
 │   ├── 01_fundamentals/                   # CPU execution cycle, minimal exit, hello world
 │   ├── 02_registers_and_memory/           # Addressing modes, .data, .bss, .rodata
@@ -115,7 +148,13 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 19_elf_internals_and_linking/      # ELF-64 header parsing and /proc/self/exe introspection
 │   ├── 20_arm64_and_riscv_cross_arch/     # CISC vs RISC (x86-64 vs ARM64 vs RISC-V)
 │   ├── 21_audio_and_sound_synthesis/      # Raw PCM audio generator & 44-byte WAV header builder
-│   └── 22_binary_security_foundations/    # Shellcoding, PIC stack strings, ptrace anti-debugging
+│   ├── 22_binary_security_foundations/    # Shellcoding, PIC stack strings, ptrace anti-debugging
+│   ├── 23_cpu_telemetry_and_benchmarking/ # CPUID vendor interrogation & RDTSC cycle latency timer
+│   ├── 24_linux_signals_and_exceptions/   # Asynchronous signal handling (rt_sigaction & restorer)
+│   ├── 25_x87_fpu_floating_point/         # 80-bit x87 FPU stack, trigonometry (sin/cos), fsqrt
+│   ├── 26_terminal_graphics_and_raw_io/   # Direct ANSI escape sequence terminal canvas & colors
+│   ├── 27_minimal_elf_golfing/            # Handcrafted 127-byte legal Linux ELF executable
+│   └── 28_kernel_timers_and_nanosleep/    # High-resolution cooperative sleep via sys_nanosleep
 ├── gas/                                   # Legacy GNU Assembler snippets
 └── X86_ASSEMBLY/                          # Legacy 32-bit x86 experimental snippets
 ```
