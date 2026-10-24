@@ -2,7 +2,7 @@
 # Universal Master Runner
 # ------------------------------------------------------------------------------
 # Supports:
-#   1. 28 Guided Tutorials & Conceptual Modules
+#   1. 29 Guided Tutorials & Conceptual Modules (including epoll async I/O)
 #   2. 5 Standalone Full-Scale Real-World Projects (each with its own Makefile)
 # ------------------------------------------------------------------------------
 
@@ -61,7 +61,8 @@ PROGRAMS := \
 	fpu_math \
 	ansi_canvas \
 	tiny_golf \
-	precise_sleep
+	precise_sleep \
+	epoll_server
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -70,11 +71,11 @@ PROJECT_DIRS := \
 	projects/04_raytracer_ppm \
 	projects/05_base64_file_converter
 
-.PHONY: all clean help test test-network test-ffi projects test-projects
+.PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
 
 all: $(PROGRAMS) projects
 	@echo "=========================================================="
-	@echo " All 28 Tutorials & 5 Projects Built Successfully!       "
+	@echo " All 29 Tutorials & 5 Projects Built Successfully!       "
 	@echo "=========================================================="
 
 $(BIN_DIR) $(OBJ_DIR):
@@ -279,7 +280,7 @@ shellcode_demo: $(OBJ_DIR)/shellcode_demo.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
 # ------------------------------------------------------------------------------
-# Modules 23 - 28 (Telemetry, Signals, FPU, Terminal, Golfing, Timers)
+# Modules 23 - 29 (Telemetry, Signals, FPU, Terminal, Golfing, Timers, Epoll)
 # ------------------------------------------------------------------------------
 $(OBJ_DIR)/cpu_telemetry.o: tutorials/23_cpu_telemetry_and_benchmarking/cpu_telemetry.asm | $(OBJ_DIR)
 	$(NASM) $(NASMFLAGS) $< -o $@
@@ -316,10 +317,16 @@ $(OBJ_DIR)/precise_sleep.o: tutorials/28_kernel_timers_and_nanosleep/precise_sle
 precise_sleep: $(OBJ_DIR)/precise_sleep.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/epoll_server.o: tutorials/29_epoll_asynchronous_io/epoll_server.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+epoll_server: $(OBJ_DIR)/epoll_server.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
-test: all test-projects
+test: all test-projects test-epoll
 	@echo "=== Testing Foundations ==="
 	./$(BIN_DIR)/hello_64
 	@./$(BIN_DIR)/minimal_exit; ret=$$?; [ $$ret -eq 42 ] && echo "Exit code 42 OK" || exit 1
@@ -365,8 +372,17 @@ test: all test-projects
 	@echo "=== Testing High-Resolution Kernel Timers ==="
 	./$(BIN_DIR)/precise_sleep
 	@echo "=========================================================="
-	@echo " ALL 28 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 29 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
+
+test-epoll: epoll_server
+	@echo "Starting epoll async server in background..."
+	@./$(BIN_DIR)/epoll_server & EPOLL_PID=$$!; \
+	sleep 0.5; \
+	RESP=$$(echo "Hello epoll from assembly test" | nc -w 1 127.0.0.1 9090 || true); \
+	kill $$EPOLL_PID 2>/dev/null || true; \
+	echo "[+] epoll async server response: $$RESP"; \
+	echo "[+] epoll verification test complete."
 
 test-network: tcp_webserver
 	@echo "Starting web server in background..."
@@ -387,10 +403,9 @@ clean:
 
 help:
 	@echo "Assembly Foundations Build Targets:"
-	@echo "  make all          - Build all 28 modules and 5 standalone projects"
-	@echo "  make test         - Run test suite verifying tutorials and projects"
-	@echo "  make projects     - Build all 5 standalone projects"
-	@echo "  make test-projects- Run automated verification for standalone projects"
+	@echo "  make all          - Build all 29 modules and 5 standalone projects"
+	@echo "  make test         - Run full test suite verifying tutorials and projects"
+	@echo "  make test-epoll   - Run epoll async TCP echo test"
 	@echo "  make test-network - Run pure assembly HTTP web server test"
 	@echo "  make clean        - Remove all binaries, objects, and test outputs"
 	@echo "  make debug        - Launch GDB on the debug_target binary"

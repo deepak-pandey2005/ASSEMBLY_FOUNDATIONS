@@ -1,22 +1,25 @@
 # Assembly Foundations 🏛️⚡
 
-> A comprehensive, hands-on, step-by-step tutorial curriculum, low-level systems reference library, and full-scale real-world project suite covering x86 and x86-64 assembly, Linux OS internals, raw TCP networking, pixel graphics, data encoding, bare-metal OS bootloaders, AVX2 SIMD vectorization, hardware atomics, C/Python FFI interop, cryptography, ELF internals, audio synthesis, binary security, CPU telemetry, signal handling, x87 FPU math, ANSI terminal control, ELF golfing, and kernel high-resolution timers.
+> A comprehensive, hands-on, step-by-step tutorial curriculum, low-level systems reference library, and full-scale real-world project suite covering x86 and x86-64 assembly, Linux OS internals, raw TCP networking, pixel graphics, data encoding, bare-metal OS bootloaders, AVX2 SIMD vectorization, hardware atomics, C/Python FFI interop, cryptography, ELF internals, audio synthesis, binary security, CPU telemetry, signal handling, x87 FPU math, ANSI terminal control, ELF golfing, kernel high-resolution timers, and high-concurrency event-driven `epoll` architecture.
 
 ---
 
 ## 🚀 Quick Start
 
-Build and test all 28 guided modules and 5 standalone projects with a single command:
+Build and test all 29 guided modules and 5 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 28 tutorial programs and 5 standalone projects
+# Build all 29 tutorial programs and 5 standalone projects
 make all
 
 # Run the automated verification test suite across everything
 make test
+
+# Test the high-concurrency epoll async server
+make test-epoll
 
 # Test the pure assembly HTTP web server daemon
 make test-network
@@ -43,7 +46,7 @@ These are complete, full-scale applications written entirely in x86-64 assembly 
 
 ---
 
-## 🗺️ Step-by-Step Curriculum (28 Modules)
+## 🗺️ Step-by-Step Curriculum (29 Modules)
 
 ### Part I: Core Architecture & Assembly Language Fundamentals
 
@@ -98,6 +101,7 @@ These are complete, full-scale applications written entirely in x86-64 assembly 
 | **26** | [**Terminal Graphics & Raw I/O**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/26_terminal_graphics_and_raw_io/README.md) | Direct TTY Control, canonical vs raw terminal mode, ANSI escape sequences (colors, cursor positioning, screen clears) | [`ansi_canvas.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/26_terminal_graphics_and_raw_io/ansi_canvas.asm) |
 | **27** | [**Minimalist ELF Golfing**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/README.md) | Binary Optimization, handcrafted 127-byte executable, raw `nasm -f bin`, ELF header + Program header overlap, zero compiler bloat | [`tiny_golf.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/tiny_golf.asm) |
 | **28** | [**Kernel Timers & Nanosleep**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/README.md) | OS Scheduling, scheduler yielding vs busy spinning, `struct timespec` (sec & nsec), `sys_nanosleep` (35) | [`precise_sleep.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/precise_sleep.asm) |
+| **29** | [**High-Concurrency `epoll` I/O**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/29_epoll_asynchronous_io/README.md) | Event-Driven Async I/O, $O(1)$ event notifications, `sys_epoll_create1` (291), `sys_epoll_ctl` (233), `sys_epoll_wait` (232), non-blocking TCP | [`epoll_server.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/29_epoll_asynchronous_io/epoll_server.asm) |
 
 ---
 
@@ -116,7 +120,7 @@ These are complete, full-scale applications written entirely in x86-64 assembly 
 ```text
 ASSEMBLY_FOUNDATIONS/
 ├── Makefile                               # Universal build, test, and debug runner
-├── ROADMAP.md                             # 28-Module Curriculum overview & learning progression
+├── ROADMAP.md                             # 29-Module Curriculum overview & learning progression
 ├── readme.md                              # Main documentation hub
 ├── docs/reference/                        # Architecture & syscall encyclopedias
 ├── cheatsheets/                           # GDB & Syntax quick-reference guides
@@ -154,7 +158,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 25_x87_fpu_floating_point/         # 80-bit x87 FPU stack, trigonometry (sin/cos), fsqrt
 │   ├── 26_terminal_graphics_and_raw_io/   # Direct ANSI escape sequence terminal canvas & colors
 │   ├── 27_minimal_elf_golfing/            # Handcrafted 127-byte legal Linux ELF executable
-│   └── 28_kernel_timers_and_nanosleep/    # High-resolution cooperative sleep via sys_nanosleep
+│   ├── 28_kernel_timers_and_nanosleep/    # High-resolution cooperative sleep via sys_nanosleep
+│   └── 29_epoll_asynchronous_io/          # Event-driven TCP echo server with O(1) epoll
 ├── gas/                                   # Legacy GNU Assembler snippets
 └── X86_ASSEMBLY/                          # Legacy 32-bit x86 experimental snippets
 ```
