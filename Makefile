@@ -63,7 +63,8 @@ PROGRAMS := \
 	tiny_golf \
 	precise_sleep \
 	epoll_server \
-	seccomp_sandbox
+	seccomp_sandbox \
+	raw_threads
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -330,6 +331,12 @@ $(OBJ_DIR)/seccomp_sandbox.o: tutorials/30_linux_seccomp_bpf_sandbox/seccomp_san
 seccomp_sandbox: $(OBJ_DIR)/seccomp_sandbox.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/raw_threads.o: tutorials/31_multithreading_raw_clone/raw_threads.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+raw_threads: $(OBJ_DIR)/raw_threads.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -380,8 +387,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/precise_sleep
 	@echo "=== Testing Seccomp Syscall Sandboxing ==="
 	./$(BIN_DIR)/seccomp_sandbox
+	@echo "=== Testing Raw sys_clone Native Multithreading ==="
+	./$(BIN_DIR)/raw_threads
 	@echo "=========================================================="
-	@echo " ALL 30 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 31 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server

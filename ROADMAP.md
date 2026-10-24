@@ -61,15 +61,17 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **28** | [Kernel Timers & Nanosleep](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/README.md) | OS Scheduling | Scheduler yielding vs busy spinning, `struct timespec` (sec & nsec), `sys_nanosleep` (35) | [`precise_sleep.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/precise_sleep.asm) |
 | **29** | [High-Concurrency `epoll` I/O](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/29_epoll_asynchronous_io/README.md) | Event-Driven Async I/O | $O(1)$ event notifications, `sys_epoll_create1` (291), `sys_epoll_ctl` (233), `sys_epoll_wait` (232), non-blocking TCP | [`epoll_server.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/29_epoll_asynchronous_io/epoll_server.asm) |
 | **30** | [Linux Seccomp Sandboxing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/30_linux_seccomp_bpf_sandbox/README.md) | Kernel Security | Process privilege restriction, `sys_prctl` (157), `PR_SET_NO_NEW_PRIVS`, `PR_SET_SECCOMP`, Strict Seccomp mode | [`seccomp_sandbox.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/30_linux_seccomp_bpf_sandbox/seccomp_sandbox.asm) |
+| **31** | [Native Multithreading with Raw `sys_clone`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/31_multithreading_raw_clone/README.md) | OS Concurrency | Kernel threads, `sys_clone` (56), `CLONE_VM`, top-of-stack alignment via `mmap`, atomic coordination | [`raw_threads.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/31_multithreading_raw_clone/raw_threads.asm) |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 30 tutorial programs and 5 standalone projects
+make all          # Compiles and links all 31 tutorial programs and 5 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost
 make clean        # Cleans binaries, objects, and generated sound/image artifacts
 ```
+
