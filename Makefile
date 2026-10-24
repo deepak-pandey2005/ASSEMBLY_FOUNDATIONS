@@ -2,7 +2,7 @@
 # Universal Master Runner
 # ------------------------------------------------------------------------------
 # Supports:
-#   1. 29 Guided Tutorials & Conceptual Modules (including epoll async I/O)
+#   1. 30 Guided Tutorials & Conceptual Modules (including epoll and seccomp sandboxing)
 #   2. 5 Standalone Full-Scale Real-World Projects (each with its own Makefile)
 # ------------------------------------------------------------------------------
 
@@ -62,7 +62,8 @@ PROGRAMS := \
 	ansi_canvas \
 	tiny_golf \
 	precise_sleep \
-	epoll_server
+	epoll_server \
+	seccomp_sandbox
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -75,7 +76,7 @@ PROJECT_DIRS := \
 
 all: $(PROGRAMS) projects
 	@echo "=========================================================="
-	@echo " All 29 Tutorials & 5 Projects Built Successfully!       "
+	@echo " All 30 Tutorials & 5 Projects Built Successfully!       "
 	@echo "=========================================================="
 
 $(BIN_DIR) $(OBJ_DIR):
@@ -280,7 +281,7 @@ shellcode_demo: $(OBJ_DIR)/shellcode_demo.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
 # ------------------------------------------------------------------------------
-# Modules 23 - 29 (Telemetry, Signals, FPU, Terminal, Golfing, Timers, Epoll)
+# Modules 23 - 30 (Telemetry, Signals, FPU, Terminal, Golfing, Timers, Epoll, Seccomp)
 # ------------------------------------------------------------------------------
 $(OBJ_DIR)/cpu_telemetry.o: tutorials/23_cpu_telemetry_and_benchmarking/cpu_telemetry.asm | $(OBJ_DIR)
 	$(NASM) $(NASMFLAGS) $< -o $@
@@ -321,6 +322,12 @@ $(OBJ_DIR)/epoll_server.o: tutorials/29_epoll_asynchronous_io/epoll_server.asm |
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 epoll_server: $(OBJ_DIR)/epoll_server.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
+$(OBJ_DIR)/seccomp_sandbox.o: tutorials/30_linux_seccomp_bpf_sandbox/seccomp_sandbox.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+seccomp_sandbox: $(OBJ_DIR)/seccomp_sandbox.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
 # ------------------------------------------------------------------------------
@@ -371,8 +378,10 @@ test: all test-projects test-epoll
 	@./$(BIN_DIR)/tiny_golf; ret=$$?; [ $$ret -eq 42 ] && echo "Tiny ELF Exit code 42 OK ($$(stat -c%s $(BIN_DIR)/tiny_golf) bytes)" || exit 1
 	@echo "=== Testing High-Resolution Kernel Timers ==="
 	./$(BIN_DIR)/precise_sleep
+	@echo "=== Testing Seccomp Syscall Sandboxing ==="
+	./$(BIN_DIR)/seccomp_sandbox
 	@echo "=========================================================="
-	@echo " ALL 29 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 30 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
@@ -403,7 +412,7 @@ clean:
 
 help:
 	@echo "Assembly Foundations Build Targets:"
-	@echo "  make all          - Build all 29 modules and 5 standalone projects"
+	@echo "  make all          - Build all 30 modules and 5 standalone projects"
 	@echo "  make test         - Run full test suite verifying tutorials and projects"
 	@echo "  make test-epoll   - Run epoll async TCP echo test"
 	@echo "  make test-network - Run pure assembly HTTP web server test"

@@ -1,10 +1,10 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **29 progressive modules** and **5 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, and high-concurrency event-driven `epoll` architecture.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **30 progressive modules** and **5 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, and Linux Seccomp syscall sandboxing.
 
 ---
 
-## 🗺️ Complete 29-Module Curriculum Matrix
+## 🗺️ Complete 30-Module Curriculum Matrix
 
 ### Part I: Core Architecture & Assembly Language Fundamentals
 
@@ -13,7 +13,7 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **01** | [Fundamentals & Architecture](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/01_fundamentals/README.md) | NASM 64-bit | CPU instruction cycle, Little-Endian byte order, ELF format | [`hello_64.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/01_fundamentals/hello_64.asm), [`minimal_exit.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/01_fundamentals/minimal_exit.asm) |
 | **02** | [Registers & Memory Addressing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/README.md) | Intel & AT&T | 8/16/32/64-bit subregisters, zero-extension gotcha, `.data` vs `.bss` vs `.rodata`, `Base + Index*Scale + Disp` | [`addressing_modes.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/addressing_modes.asm), [`data_sections.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/02_registers_and_memory/data_sections.asm) |
 | **03** | [Arithmetic & Bitwise Logic](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/03_arithmetic_and_logic/README.md) | NASM 64-bit | `ADC`, `SBB`, `IMUL`, `IDIV`, `SHL`, `SAR`, CPU RFLAGS (`ZF`, `CF`, `OF`, `SF`) | [`arithmetic.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/03_arithmetic_and_logic/arithmetic.asm), [`bitwise.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/03_arithmetic_and_logic/bitwise.asm) |
-| **04** | [Control Flow & Branching](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/README.md) | NASM 64-bit | `CMP`, `TEST`, signed (`JG`/`JL`) vs unsigned (`JA`/`JB`), loops, branches | [`branches.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/branches.asm), [`loop_sum.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/loop_sum.asm) |
+| **04** | [Control Flow & Branching](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/README.md) | NASM 64-bit | `CMP`, `TEST`, signed (`JG`/`JL`) vs unsigned (`JA`/`JB`) conditional jumps, `if-else` chains, `for`/`while` loops | [`branches.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/branches.asm), [`loop_sum.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/04_control_flow/loop_sum.asm) |
 | **05** | [Call Stack & Functions (ABI)](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/05_stack_and_functions/README.md) | NASM 64-bit | System V AMD64 ABI, register arguments, stack frames, 16-byte alignment | [`function_call.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/05_stack_and_functions/function_call.asm), [`stack_frame.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/05_stack_and_functions/stack_frame.asm) |
 | **06** | [Linux System Calls](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/06_system_calls/README.md) | 64-bit vs 32-bit | `syscall` vs `int 0x80`, file descriptors, reading stdin, writing stdout/stderr, opening/closing files on disk | [`user_input.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/06_system_calls/user_input.asm), [`cat_file.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/06_system_calls/cat_file.asm) |
 | **07** | [Strings & Memory Blocks](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/07_string_and_arrays/README.md) | NASM 64-bit | `MOVSB`, `STOSB`, `SCASB`, `REP` prefix, direction flag (`CLD`/`STD`), string reverse | [`strlen_reverse.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/07_string_and_arrays/strlen_reverse.asm), [`array_sum.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/07_string_and_arrays/array_sum.asm) |
@@ -60,13 +60,14 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **27** | [Minimalist ELF Golfing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/README.md) | Binary Optimization | Handcrafted 127-byte executable, raw `nasm -f bin`, ELF header + Program header overlap, zero compiler bloat | [`tiny_golf.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/27_minimal_elf_golfing/tiny_golf.asm) |
 | **28** | [Kernel Timers & Nanosleep](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/README.md) | OS Scheduling | Scheduler yielding vs busy spinning, `struct timespec` (sec & nsec), `sys_nanosleep` (35) | [`precise_sleep.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/28_kernel_timers_and_nanosleep/precise_sleep.asm) |
 | **29** | [High-Concurrency `epoll` I/O](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/29_epoll_asynchronous_io/README.md) | Event-Driven Async I/O | $O(1)$ event notifications, `sys_epoll_create1` (291), `sys_epoll_ctl` (233), `sys_epoll_wait` (232), non-blocking TCP | [`epoll_server.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/29_epoll_asynchronous_io/epoll_server.asm) |
+| **30** | [Linux Seccomp Sandboxing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/30_linux_seccomp_bpf_sandbox/README.md) | Kernel Security | Process privilege restriction, `sys_prctl` (157), `PR_SET_NO_NEW_PRIVS`, `PR_SET_SECCOMP`, Strict Seccomp mode | [`seccomp_sandbox.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/30_linux_seccomp_bpf_sandbox/seccomp_sandbox.asm) |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 29 tutorial programs and 5 standalone projects
+make all          # Compiles and links all 30 tutorial programs and 5 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost
