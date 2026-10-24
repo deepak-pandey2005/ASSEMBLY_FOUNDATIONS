@@ -163,7 +163,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 29_epoll_asynchronous_io/          # Event-driven TCP echo server with O(1) epoll
 │   ├── 30_linux_seccomp_bpf_sandbox/      # Linux Seccomp & PR_SET_NO_NEW_PRIVS syscall lockdown
 │   ├── 31_multithreading_raw_clone/       # Native threads via sys_clone, user stacks & atomics
-│   └── 32_hardware_virtualization_detection/ # CPUID hypervisor bit, vendor signature & VT-x/SVM
+│   ├── 32_hardware_virtualization_detection/ # CPUID hypervisor bit, vendor signature & VT-x/SVM
+│   └── 33_heap_allocator_sys_brk/         # Custom malloc/free heap allocator via sys_brk
 ├── gas/                                   # Legacy GNU Assembler snippets
 └── X86_ASSEMBLY/                          # Legacy 32-bit x86 experimental snippets
 ```

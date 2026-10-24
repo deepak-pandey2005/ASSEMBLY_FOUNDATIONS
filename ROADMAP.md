@@ -63,17 +63,19 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **30** | [Linux Seccomp Sandboxing](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/30_linux_seccomp_bpf_sandbox/README.md) | Kernel Security | Process privilege restriction, `sys_prctl` (157), `PR_SET_NO_NEW_PRIVS`, `PR_SET_SECCOMP`, Strict Seccomp mode | [`seccomp_sandbox.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/30_linux_seccomp_bpf_sandbox/seccomp_sandbox.asm) |
 | **31** | [Native Multithreading with Raw `sys_clone`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/31_multithreading_raw_clone/README.md) | OS Concurrency | Kernel threads, `sys_clone` (56), `CLONE_VM`, top-of-stack alignment via `mmap`, atomic coordination | [`raw_threads.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/31_multithreading_raw_clone/raw_threads.asm) |
 | **32** | [Hardware Virtualization & Hypervisor Detection](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/32_hardware_virtualization_detection/README.md) | CPU Internals | Hypervisor present bit (`CPUID.1:ECX[31]`), signature extraction (`0x40000000`), Intel VT-x (`VMX`) & AMD-V (`SVM`) | [`vm_detect.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/32_hardware_virtualization_detection/vm_detect.asm) |
+| **33** | [Custom Heap Allocator with `sys_brk`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/33_heap_allocator_sys_brk/README.md) | Memory Internals | Process program break (`sys_brk` 12), chunk metadata headers (size, free flag, next), `asm_malloc`, `asm_free`, block reuse | [`heap_allocator.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/33_heap_allocator_sys_brk/heap_allocator.asm) |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 32 tutorial programs and 5 standalone projects
+make all          # Compiles and links all 33 tutorial programs and 5 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost
 make clean        # Cleans binaries, objects, and generated sound/image artifacts
 ```
+
 
 

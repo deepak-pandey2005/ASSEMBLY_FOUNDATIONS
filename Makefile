@@ -65,7 +65,8 @@ PROGRAMS := \
 	epoll_server \
 	seccomp_sandbox \
 	raw_threads \
-	vm_detect
+	vm_detect \
+	heap_allocator
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -344,6 +345,12 @@ $(OBJ_DIR)/vm_detect.o: tutorials/32_hardware_virtualization_detection/vm_detect
 vm_detect: $(OBJ_DIR)/vm_detect.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/heap_allocator.o: tutorials/33_heap_allocator_sys_brk/heap_allocator.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+heap_allocator: $(OBJ_DIR)/heap_allocator.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -398,8 +405,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/raw_threads
 	@echo "=== Testing Hardware Virtualization & Hypervisor Detection ==="
 	./$(BIN_DIR)/vm_detect
+	@echo "=== Testing Custom Heap Allocator (sys_brk) ==="
+	./$(BIN_DIR)/heap_allocator
 	@echo "=========================================================="
-	@echo " ALL 32 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 33 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
