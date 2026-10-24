@@ -6,13 +6,13 @@
 
 ## 🚀 Quick Start
 
-Build and test all 30 guided modules and 5 standalone projects with a single command:
+Build and test all 33 guided modules and 6 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 30 tutorial programs and 5 standalone projects
+# Build all 33 tutorial programs and 6 standalone projects
 make all
 
 # Run the automated verification test suite across everything
@@ -43,6 +43,7 @@ These are complete, full-scale applications written entirely in x86-64 assembly 
 | **03** | [**Polyphonic WAV Synthesizer**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/03_wav_audio_generator/README.md) | 44-byte dynamic RIFF/WAVE header generator, 44.1kHz 16-bit stereo PCM audio engine, dual-tone harmonic chord synthesis with ADSR exponential amplitude decay envelope | `cd projects/03_wav_audio_generator && make run` |
 | **04** | [**3D Sphere Raytracer**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/04_raytracer_ppm/README.md) | Mathematical primary ray generation, vector dot products, quadratic ray-sphere intersection solver, Lambertian diffuse surface lighting with directional light source, Netpbm PPM renderer | `cd projects/04_raytracer_ppm && make run` |
 | **05** | [**Streaming Base64 CLI Converter**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/05_base64_file_converter/README.md) | Streaming 4KB block disk buffer I/O, 24-bit to 4x6-bit Base64 bit alignment, automated MIME 76-column line-wrapping, tail padding (`=`/`==`) | `cd projects/05_base64_file_converter && make test` |
+| **06** | [**SHA-256 Cryptographic Hasher CLI**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/06_sha256_hasher/README.md) | FIPS 180-4 standard, 64-round constants, message schedule expansion ($W_0 \dots W_{63}$), compression loop, NIST test vector verified | `cd projects/06_sha256_hasher && make test` |
 
 ---
 
@@ -130,7 +131,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 02_http_server_daemon/             # Multi-client HTTP daemon with routing & JSON
 │   ├── 03_wav_audio_generator/            # 16-bit stereo polyphonic WAV audio synthesizer
 │   ├── 04_raytracer_ppm/                  # 3D sphere raytracer with diffuse light shading
-│   └── 05_base64_file_converter/          # Stream-buffered binary-to-Base64 CLI converter
+│   ├── 05_base64_file_converter/          # Stream-buffered binary-to-Base64 CLI converter
+│   └── 06_sha256_hasher/                  # NIST FIPS 180-4 SHA-256 cryptographic hasher CLI
 ├── tutorials/
 │   ├── 01_fundamentals/                   # CPU execution cycle, minimal exit, hello world
 │   ├── 02_registers_and_memory/           # Addressing modes, .data, .bss, .rodata
