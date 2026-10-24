@@ -64,7 +64,8 @@ PROGRAMS := \
 	precise_sleep \
 	epoll_server \
 	seccomp_sandbox \
-	raw_threads
+	raw_threads \
+	vm_detect
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -337,6 +338,12 @@ $(OBJ_DIR)/raw_threads.o: tutorials/31_multithreading_raw_clone/raw_threads.asm 
 raw_threads: $(OBJ_DIR)/raw_threads.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/vm_detect.o: tutorials/32_hardware_virtualization_detection/vm_detect.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+vm_detect: $(OBJ_DIR)/vm_detect.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -389,8 +396,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/seccomp_sandbox
 	@echo "=== Testing Raw sys_clone Native Multithreading ==="
 	./$(BIN_DIR)/raw_threads
+	@echo "=== Testing Hardware Virtualization & Hypervisor Detection ==="
+	./$(BIN_DIR)/vm_detect
 	@echo "=========================================================="
-	@echo " ALL 31 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 32 MODULES & 5 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
