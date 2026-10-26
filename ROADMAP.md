@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **35 progressive modules** and **7 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, and Linux futex low-latency mutexes.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **35 progressive modules** and **8 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, and streaming JSON parsing.
 
 ---
 
@@ -72,7 +72,7 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 35 tutorial programs and 7 standalone projects
+make all          # Compiles and links all 35 tutorial programs and 8 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost

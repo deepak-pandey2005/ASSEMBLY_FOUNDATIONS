@@ -77,7 +77,8 @@ PROJECT_DIRS := \
 	projects/04_raytracer_ppm \
 	projects/05_base64_file_converter \
 	projects/06_sha256_hasher \
-	projects/07_mmap_key_value_store
+	projects/07_mmap_key_value_store \
+	projects/08_json_parser
 
 .PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
 
@@ -111,6 +112,8 @@ test-projects:
 	@$(MAKE) -C projects/06_sha256_hasher test
 	@echo "=== Testing Standalone Project 07: Memory-Mapped Key-Value Store ==="
 	@$(MAKE) -C projects/07_mmap_key_value_store test
+	@echo "=== Testing Standalone Project 08: JSON Lexer & Parser ==="
+	@$(MAKE) -C projects/08_json_parser test
 	@echo "[+] All standalone projects verified successfully!"
 
 # ------------------------------------------------------------------------------
@@ -432,7 +435,7 @@ test: all test-projects test-epoll
 	@echo "=== Testing Linux Futex Low-Latency Mutex ==="
 	./$(BIN_DIR)/futex_mutex
 	@echo "=========================================================="
-	@echo " ALL 35 MODULES & 7 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 35 MODULES & 8 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
