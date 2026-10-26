@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **36 progressive modules** and **9 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, and pure assembly CHIP-8 CPU emulation.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **37 progressive modules** and **9 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, and kernel hardware performance monitoring counters (`perf_event_open`).
 
 ---
 
@@ -67,13 +67,14 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **34** | [Hardware Port I/O & CMOS RTC](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/34_hardware_port_io_cmos_rtc/README.md) | Hardware I/O Ports | Dedicated 16-bit PMIO port space, `IN`/`OUT`, `sys_ioperm` (173), CMOS ports `0x70`/`0x71`, BCD hardware decoding | [`cmos_rtc.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/34_hardware_port_io_cmos_rtc/cmos_rtc.asm) |
 | **35** | [Linux Futex Low-Latency Mutex](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/35_linux_futex_low_latency_mutex/README.md) | OS Synchronization | `sys_futex` (202), `FUTEX_WAIT`, `FUTEX_WAKE`, atomic fast-path (0 syscalls), kernel wait queue sleep | [`futex_mutex.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/35_linux_futex_low_latency_mutex/futex_mutex.asm) |
 | **36** | [Linux Kernel Inotify File-System Watcher](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/36_inotify_file_system_watcher/README.md) | OS Event Subsystem | `sys_inotify_init1` (294), `sys_inotify_add_watch` (254), `IN_CREATE`, binary `struct inotify_event` parsing | [`inotify_watcher.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/36_inotify_file_system_watcher/inotify_watcher.asm) |
+| **37** | [Linux Kernel Hardware Performance Counters](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/37_kernel_hardware_performance_counters/README.md) | Hardware PMU Subsystem | `sys_perf_event_open` (298), hardware CPU cycles, instructions retired, Instructions-Per-Cycle (IPC), `sys_ioctl` control | [`perf_counters.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/37_kernel_hardware_performance_counters/perf_counters.asm) |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 36 tutorial programs and 9 standalone projects
+make all          # Compiles and links all 37 tutorial programs and 9 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost

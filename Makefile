@@ -69,7 +69,8 @@ PROGRAMS := \
 	heap_allocator \
 	cmos_rtc \
 	futex_mutex \
-	inotify_watcher
+	inotify_watcher \
+	perf_counters
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -384,6 +385,12 @@ $(OBJ_DIR)/inotify_watcher.o: tutorials/36_inotify_file_system_watcher/inotify_w
 inotify_watcher: $(OBJ_DIR)/inotify_watcher.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/perf_counters.o: tutorials/37_kernel_hardware_performance_counters/perf_counters.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+perf_counters: $(OBJ_DIR)/perf_counters.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -446,8 +453,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/futex_mutex
 	@echo "=== Testing Linux Kernel Inotify File-System Watcher ==="
 	./$(BIN_DIR)/inotify_watcher
+	@echo "=== Testing Linux Kernel Hardware Performance Counters ==="
+	./$(BIN_DIR)/perf_counters
 	@echo "=========================================================="
-	@echo " ALL 36 MODULES & 9 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 37 MODULES & 9 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
