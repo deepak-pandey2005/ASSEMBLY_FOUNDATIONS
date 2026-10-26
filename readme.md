@@ -6,13 +6,13 @@
 
 ## 🚀 Quick Start
 
-Build and test all 33 guided modules and 6 standalone projects with a single command:
+Build and test all 33 guided modules and 7 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 33 tutorial programs and 6 standalone projects
+# Build all 33 tutorial programs and 7 standalone projects
 make all
 
 # Run the automated verification test suite across everything
@@ -44,6 +44,7 @@ These are complete, full-scale applications written entirely in x86-64 assembly 
 | **04** | [**3D Sphere Raytracer**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/04_raytracer_ppm/README.md) | Mathematical primary ray generation, vector dot products, quadratic ray-sphere intersection solver, Lambertian diffuse surface lighting with directional light source, Netpbm PPM renderer | `cd projects/04_raytracer_ppm && make run` |
 | **05** | [**Streaming Base64 CLI Converter**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/05_base64_file_converter/README.md) | Streaming 4KB block disk buffer I/O, 24-bit to 4x6-bit Base64 bit alignment, automated MIME 76-column line-wrapping, tail padding (`=`/`==`) | `cd projects/05_base64_file_converter && make test` |
 | **06** | [**SHA-256 Cryptographic Hasher CLI**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/06_sha256_hasher/README.md) | FIPS 180-4 standard, 64-round constants, message schedule expansion ($W_0 \dots W_{63}$), compression loop, NIST test vector verified | `cd projects/06_sha256_hasher && make test` |
+| **07** | [**Memory-Mapped Persistent KV Store**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/07_mmap_key_value_store/README.md) | Disk-persistent binary table engine via `sys_open`, `sys_ftruncate`, `sys_mmap` (`MAP_SHARED`), and `sys_msync`; `set`, `get`, and `dump` | `cd projects/07_mmap_key_value_store && make test` |
 
 ---
 
@@ -132,7 +133,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 03_wav_audio_generator/            # 16-bit stereo polyphonic WAV audio synthesizer
 │   ├── 04_raytracer_ppm/                  # 3D sphere raytracer with diffuse light shading
 │   ├── 05_base64_file_converter/          # Stream-buffered binary-to-Base64 CLI converter
-│   └── 06_sha256_hasher/                  # NIST FIPS 180-4 SHA-256 cryptographic hasher CLI
+│   ├── 06_sha256_hasher/                  # NIST FIPS 180-4 SHA-256 cryptographic hasher CLI
+│   └── 07_mmap_key_value_store/           # Zero-copy disk-persistent memory-mapped binary KV database
 ├── tutorials/
 │   ├── 01_fundamentals/                   # CPU execution cycle, minimal exit, hello world
 │   ├── 02_registers_and_memory/           # Addressing modes, .data, .bss, .rodata

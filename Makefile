@@ -74,7 +74,8 @@ PROJECT_DIRS := \
 	projects/03_wav_audio_generator \
 	projects/04_raytracer_ppm \
 	projects/05_base64_file_converter \
-	projects/06_sha256_hasher
+	projects/06_sha256_hasher \
+	projects/07_mmap_key_value_store
 
 .PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
 
@@ -106,6 +107,8 @@ test-projects:
 	@$(MAKE) -C projects/05_base64_file_converter test
 	@echo "=== Testing Standalone Project 06: SHA-256 Hasher CLI ==="
 	@$(MAKE) -C projects/06_sha256_hasher test
+	@echo "=== Testing Standalone Project 07: Memory-Mapped Key-Value Store ==="
+	@$(MAKE) -C projects/07_mmap_key_value_store test
 	@echo "[+] All standalone projects verified successfully!"
 
 # ------------------------------------------------------------------------------
@@ -411,7 +414,7 @@ test: all test-projects test-epoll
 	@echo "=== Testing Custom Heap Allocator (sys_brk) ==="
 	./$(BIN_DIR)/heap_allocator
 	@echo "=========================================================="
-	@echo " ALL 33 MODULES & 6 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 33 MODULES & 7 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
