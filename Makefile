@@ -66,7 +66,8 @@ PROGRAMS := \
 	seccomp_sandbox \
 	raw_threads \
 	vm_detect \
-	heap_allocator
+	heap_allocator \
+	cmos_rtc
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -357,6 +358,12 @@ $(OBJ_DIR)/heap_allocator.o: tutorials/33_heap_allocator_sys_brk/heap_allocator.
 heap_allocator: $(OBJ_DIR)/heap_allocator.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/cmos_rtc.o: tutorials/34_hardware_port_io_cmos_rtc/cmos_rtc.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+cmos_rtc: $(OBJ_DIR)/cmos_rtc.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -413,8 +420,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/vm_detect
 	@echo "=== Testing Custom Heap Allocator (sys_brk) ==="
 	./$(BIN_DIR)/heap_allocator
+	@echo "=== Testing Hardware Port I/O & CMOS RTC Clock ==="
+	./$(BIN_DIR)/cmos_rtc
 	@echo "=========================================================="
-	@echo " ALL 33 MODULES & 7 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 34 MODULES & 7 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
