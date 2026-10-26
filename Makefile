@@ -70,7 +70,8 @@ PROGRAMS := \
 	cmos_rtc \
 	futex_mutex \
 	inotify_watcher \
-	perf_counters
+	perf_counters \
+	io_uring_demo
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -392,6 +393,12 @@ $(OBJ_DIR)/perf_counters.o: tutorials/37_kernel_hardware_performance_counters/pe
 perf_counters: $(OBJ_DIR)/perf_counters.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/io_uring_demo.o: tutorials/38_linux_io_uring_async_io/io_uring_demo.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+io_uring_demo: $(OBJ_DIR)/io_uring_demo.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -456,8 +463,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/inotify_watcher
 	@echo "=== Testing Linux Kernel Hardware Performance Counters ==="
 	./$(BIN_DIR)/perf_counters
+	@echo "=== Testing Modern Linux io_uring Asynchronous I/O ==="
+	./$(BIN_DIR)/io_uring_demo
 	@echo "=========================================================="
-	@echo " ALL 37 MODULES & 10 STANDALONE PROJECTS PASSED PERFECTLY!"
+	@echo " ALL 38 MODULES & 10 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server
