@@ -6,13 +6,13 @@
 
 ## 🚀 Quick Start
 
-Build and test all 36 guided modules and 8 standalone projects with a single command:
+Build and test all 36 guided modules and 9 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 36 tutorial programs and 8 standalone projects
+# Build all 36 tutorial programs and 9 standalone projects
 make all
 
 # Run the automated verification test suite across everything
@@ -46,6 +46,7 @@ These are complete, full-scale applications written entirely in x86-64 assembly 
 | **06** | [**SHA-256 Cryptographic Hasher CLI**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/06_sha256_hasher/README.md) | FIPS 180-4 standard, 64-round constants, message schedule expansion ($W_0 \dots W_{63}$), compression loop, NIST test vector verified | `cd projects/06_sha256_hasher && make test` |
 | **07** | [**Memory-Mapped Persistent KV Store**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/07_mmap_key_value_store/README.md) | Disk-persistent binary table engine via `sys_open`, `sys_ftruncate`, `sys_mmap` (`MAP_SHARED`), and `sys_msync`; `set`, `get`, and `dump` | `cd projects/07_mmap_key_value_store && make test` |
 | **08** | [**Streaming JSON Lexer & Parser**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/08_json_parser/README.md) | RFC 8259-compliant zero-copy tokenization, string/integer/boolean literal parsing, object key search & AST field extraction | `cd projects/08_json_parser && make test` |
+| **09** | [**CHIP-8 Virtual Machine & CPU**](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/09_chip8_emulator/README.md) | 4KB virtual RAM, 16 8-bit registers, 16-bit index & PC, 64x32 monochrome display, full opcode decoding & sprite renderer | `cd projects/09_chip8_emulator && make test` |
 
 ---
 
@@ -136,7 +137,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 05_base64_file_converter/          # Stream-buffered binary-to-Base64 CLI converter
 │   ├── 06_sha256_hasher/                  # NIST FIPS 180-4 SHA-256 cryptographic hasher CLI
 │   ├── 07_mmap_key_value_store/           # Zero-copy disk-persistent memory-mapped binary KV database
-│   └── 08_json_parser/                    # Streaming RFC 8259-compliant JSON tokenizer & AST parser
+│   ├── 08_json_parser/                    # Streaming RFC 8259-compliant JSON tokenizer & AST parser
+│   └── 09_chip8_emulator/                 # Complete CHIP-8 virtual machine & CPU interpreter
 ├── tutorials/
 │   ├── 01_fundamentals/                   # CPU execution cycle, minimal exit, hello world
 │   ├── 02_registers_and_memory/           # Addressing modes, .data, .bss, .rodata
