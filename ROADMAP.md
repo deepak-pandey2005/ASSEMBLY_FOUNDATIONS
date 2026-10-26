@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **37 progressive modules** and **9 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, and kernel hardware performance monitoring counters (`perf_event_open`).
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **37 progressive modules** and **10 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), and RFC 1035 UDP DNS resolution.
 
 ---
 
@@ -71,10 +71,27 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 
 ---
 
+## 🏛️ Standalone Real-World Projects Matrix
+
+| Project | Name & Directory | Domain | Key Architecture & Sycalls |
+|---|---|---|---|
+| **01** | [Interactive Snake Game](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/01_interactive_snake_game/README.md) | Terminal Game Engine | Raw terminal non-canonical I/O, ANSI escape sequences, `termios`, `sys_nanosleep` |
+| **02** | [HTTP Server Daemon](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/02_http_server_daemon/README.md) | Network Systems | Raw TCP sockets (`AF_INET`, `SOCK_STREAM`), `sys_bind`, `sys_listen`, `sys_accept`, HTTP/1.1 response streaming |
+| **03** | [WAV Audio Generator](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/03_wav_audio_generator/README.md) | Digital Signal Processing | 44-byte RIFF/WAV header generation, dual-frequency sine wave synth, 16-bit PCM |
+| **04** | [Raytracer PPM](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/04_raytracer_ppm/README.md) | Computer Graphics | 3D ray-sphere intersection, 80-bit x87 FPU vector math, Lambertian diffuse shading, PPM image output |
+| **05** | [Base64 File Converter](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/05_base64_file_converter/README.md) | Systems Tooling | RFC 4648 bit-packing engine, 3-byte to 4-char encoding, file streaming I/O |
+| **06** | [SHA-256 Hasher](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/06_sha256_hasher/README.md) | Cryptography | NIST FIPS 180-4 standard cryptographic hash algorithm, 64-round compression, big-endian message schedule |
+| **07** | [Memory-Mapped Key-Value Store](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/07_mmap_key_value_store/README.md) | Database Internals | Zero-copy binary key-value engine, `sys_mmap` (`MAP_SHARED`), `sys_msync`, binary record indexing |
+| **08** | [Streaming JSON Parser](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/08_json_parser/README.md) | Data Serialization | RFC 8259 streaming tokenizer/lexer, scalar/string parser, zero-copy key lookup |
+| **09** | [CHIP-8 Virtual Machine](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/09_chip8_emulator/README.md) | Virtualization & Emulation | Full 4KB RAM, 16 registers, font sprites, 64x32 display rendering, opcode decoder & runner |
+| **10** | [RFC 1035 DNS Resolver](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/10_dns_client/README.md) | Internet Protocols | Raw UDP sockets (`SOCK_DGRAM`), binary DNS header/QNAME encoding, compression pointer parsing, IPv4 address resolution |
+
+---
+
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 37 tutorial programs and 9 standalone projects
+make all          # Compiles and links all 37 tutorial programs and 10 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost

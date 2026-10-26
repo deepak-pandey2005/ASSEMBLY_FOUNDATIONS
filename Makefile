@@ -81,7 +81,8 @@ PROJECT_DIRS := \
 	projects/06_sha256_hasher \
 	projects/07_mmap_key_value_store \
 	projects/08_json_parser \
-	projects/09_chip8_emulator
+	projects/09_chip8_emulator \
+	projects/10_dns_client
 
 .PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
 
@@ -456,7 +457,7 @@ test: all test-projects test-epoll
 	@echo "=== Testing Linux Kernel Hardware Performance Counters ==="
 	./$(BIN_DIR)/perf_counters
 	@echo "=========================================================="
-	@echo " ALL 37 MODULES & 9 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 37 MODULES & 10 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server
