@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **34 progressive modules** and **7 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, and hardware port I/O with CMOS RTC.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **35 progressive modules** and **7 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, and Linux futex low-latency mutexes.
 
 ---
 
@@ -65,18 +65,20 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **32** | [Hardware Virtualization & Hypervisor Detection](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/32_hardware_virtualization_detection/README.md) | CPU Internals | Hypervisor present bit (`CPUID.1:ECX[31]`), signature extraction (`0x40000000`), Intel VT-x (`VMX`) & AMD-V (`SVM`) | [`vm_detect.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/32_hardware_virtualization_detection/vm_detect.asm) |
 | **33** | [Custom Heap Allocator with `sys_brk`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/33_heap_allocator_sys_brk/README.md) | Memory Internals | Process program break (`sys_brk` 12), chunk metadata headers (size, free flag, next), `asm_malloc`, `asm_free`, block reuse | [`heap_allocator.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/33_heap_allocator_sys_brk/heap_allocator.asm) |
 | **34** | [Hardware Port I/O & CMOS RTC](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/34_hardware_port_io_cmos_rtc/README.md) | Hardware I/O Ports | Dedicated 16-bit PMIO port space, `IN`/`OUT`, `sys_ioperm` (173), CMOS ports `0x70`/`0x71`, BCD hardware decoding | [`cmos_rtc.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/34_hardware_port_io_cmos_rtc/cmos_rtc.asm) |
+| **35** | [Linux Futex Low-Latency Mutex](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/35_linux_futex_low_latency_mutex/README.md) | OS Synchronization | `sys_futex` (202), `FUTEX_WAIT`, `FUTEX_WAKE`, atomic fast-path (0 syscalls), kernel wait queue sleep | [`futex_mutex.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/35_linux_futex_low_latency_mutex/futex_mutex.asm) |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 34 tutorial programs and 7 standalone projects
+make all          # Compiles and links all 35 tutorial programs and 7 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost
 make clean        # Cleans binaries, objects, and generated sound/image artifacts
 ```
+
 
 
 

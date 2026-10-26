@@ -67,7 +67,8 @@ PROGRAMS := \
 	raw_threads \
 	vm_detect \
 	heap_allocator \
-	cmos_rtc
+	cmos_rtc \
+	futex_mutex
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -364,6 +365,12 @@ $(OBJ_DIR)/cmos_rtc.o: tutorials/34_hardware_port_io_cmos_rtc/cmos_rtc.asm | $(O
 cmos_rtc: $(OBJ_DIR)/cmos_rtc.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/futex_mutex.o: tutorials/35_linux_futex_low_latency_mutex/futex_mutex.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+futex_mutex: $(OBJ_DIR)/futex_mutex.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -422,8 +429,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/heap_allocator
 	@echo "=== Testing Hardware Port I/O & CMOS RTC Clock ==="
 	./$(BIN_DIR)/cmos_rtc
+	@echo "=== Testing Linux Futex Low-Latency Mutex ==="
+	./$(BIN_DIR)/futex_mutex
 	@echo "=========================================================="
-	@echo " ALL 34 MODULES & 7 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 35 MODULES & 7 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
