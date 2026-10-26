@@ -6,13 +6,13 @@
 
 ## 🚀 Quick Start
 
-Build and test all 35 guided modules and 8 standalone projects with a single command:
+Build and test all 36 guided modules and 8 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 35 tutorial programs and 8 standalone projects
+# Build all 36 tutorial programs and 8 standalone projects
 make all
 
 # Run the automated verification test suite across everything
@@ -172,7 +172,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 32_hardware_virtualization_detection/ # CPUID hypervisor bit, vendor signature & VT-x/SVM
 │   ├── 33_heap_allocator_sys_brk/         # Custom malloc/free heap allocator via sys_brk
 │   ├── 34_hardware_port_io_cmos_rtc/      # Hardware port I/O (IN/OUT), sys_ioperm & CMOS clock
-│   └── 35_linux_futex_low_latency_mutex/  # Fast userspace mutex (sys_futex), atomic fast-path
+│   ├── 35_linux_futex_low_latency_mutex/  # Fast userspace mutex (sys_futex), atomic fast-path
+│   └── 36_inotify_file_system_watcher/    # Linux inotify file monitoring & binary struct parsing
 ├── gas/                                   # Legacy GNU Assembler snippets
 └── X86_ASSEMBLY/                          # Legacy 32-bit x86 experimental snippets
 ```

@@ -68,7 +68,8 @@ PROGRAMS := \
 	vm_detect \
 	heap_allocator \
 	cmos_rtc \
-	futex_mutex
+	futex_mutex \
+	inotify_watcher
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -374,6 +375,12 @@ $(OBJ_DIR)/futex_mutex.o: tutorials/35_linux_futex_low_latency_mutex/futex_mutex
 futex_mutex: $(OBJ_DIR)/futex_mutex.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/inotify_watcher.o: tutorials/36_inotify_file_system_watcher/inotify_watcher.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+inotify_watcher: $(OBJ_DIR)/inotify_watcher.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -434,8 +441,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/cmos_rtc
 	@echo "=== Testing Linux Futex Low-Latency Mutex ==="
 	./$(BIN_DIR)/futex_mutex
+	@echo "=== Testing Linux Kernel Inotify File-System Watcher ==="
+	./$(BIN_DIR)/inotify_watcher
 	@echo "=========================================================="
-	@echo " ALL 35 MODULES & 8 STANDALONE PROJECTS PASSED PERFECTLY! "
+	@echo " ALL 36 MODULES & 8 STANDALONE PROJECTS PASSED PERFECTLY! "
 	@echo "=========================================================="
 
 test-epoll: epoll_server
