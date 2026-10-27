@@ -3,6 +3,54 @@
 ; Description: Asynchronous, event-driven TCP Echo Server using Linux epoll
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/epoll.h>
+; #include <sys/socket.h>
+; #include <netinet/in.h>
+; #include <fcntl.h>
+; #include <unistd.h>
+;
+; int main(void) {
+;     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+;     int opt = 1;
+;     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+;     fcntl(server_fd, F_SETFL, fcntl(server_fd, F_GETFL, 0) | O_NONBLOCK);
+;
+;     struct sockaddr_in addr = { .sin_family = AF_INET, .sin_port = htons(9090), .sin_addr.s_addr = 0 };
+;     bind(server_fd, (struct sockaddr *)&addr, sizeof(addr));
+;     listen(server_fd, 128);
+;
+;     int epoll_fd = epoll_create1(0);
+;     struct epoll_event ev = { .events = EPOLLIN, .data.fd = server_fd };
+;     epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_fd, &ev);
+;
+;     struct epoll_event events[16];
+;     while (1) {
+;         int nfds = epoll_wait(epoll_fd, events, 16, 5000);
+;         for (int i = 0; i < nfds; i++) {
+;             if (events[i].data.fd == server_fd) {
+;                 int client_fd = accept(server_fd, NULL, NULL);
+;                 fcntl(client_fd, F_SETFL, fcntl(client_fd, F_GETFL, 0) | O_NONBLOCK);
+;                 struct epoll_event client_ev = { .events = EPOLLIN, .data.fd = client_fd };
+;                 epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_fd, &client_ev);
+;             } else {
+;                 char buf[1024];
+;                 int fd = events[i].data.fd;
+;                 ssize_t n = read(fd, buf, sizeof(buf));
+;                 if (n <= 0) {
+;                     epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, NULL);
+;                     close(fd);
+;                 } else {
+;                     write(fd, "[Echo]: ", 8);
+;                     write(fd, buf, n);
+;                 }
+;             }
+;         }
+;     }
+; }
 ; ==============================================================================
 
 section .data

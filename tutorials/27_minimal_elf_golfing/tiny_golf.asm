@@ -3,6 +3,20 @@
 ; Description: Handcrafted minimal 64-bit Linux ELF executable (~127 bytes)
 ; Architecture: x86-64 Linux
 ; Assembler: NASM (Raw Binary output: `nasm -f bin tiny_golf.asm -o tiny_golf`)
+;
+; ==============================================================================
+; Equivalent C Representation:
+; ------------------------------------------------------------------------------
+; #include <unistd.h>
+;
+; int main(void) {
+;     _exit(42);
+; }
+;
+; // Note: In C with glibc, the resulting linked executable is typically ~16,000 bytes.
+; // In raw handcrafted NASM binary mode, we manually pack the 64-byte ELF header
+; // and 56-byte Program Header directly with 7 bytes of machine instructions,
+; // producing a fully compliant 127-byte executable that returns code 42!
 ; ==============================================================================
 
 BITS 64
@@ -48,6 +62,7 @@ phdr:
 
 ; ------------------------------------------------------------------------------
 ; 3. EXECUTABLE MACHINE CODE
+; C equivalent: _exit(42);
 ; ------------------------------------------------------------------------------
 _start:
     ; sys_exit(42)

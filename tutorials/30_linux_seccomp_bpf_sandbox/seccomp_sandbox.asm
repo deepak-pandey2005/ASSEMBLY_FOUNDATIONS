@@ -3,6 +3,32 @@
 ; Description: Process isolation via Linux Seccomp (Secure Computing Mode)
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/prctl.h>
+; #include <linux/seccomp.h>
+; #include <unistd.h>
+;
+; int main(void) {
+;     // Step 1: Pre-sandbox
+;     write(STDOUT_FILENO, "[+] Step 1: Pre-sandbox. All Linux syscalls permitted.\n", 54);
+;
+;     // Step 2: Prevent acquiring new privileges (prctl PR_SET_NO_NEW_PRIVS)
+;     prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+;
+;     // Step 3: Enter Strict Seccomp (only read, write, exit, sigreturn allowed!)
+;     prctl(PR_SET_SECCOMP, SECCOMP_MODE_STRICT, 0, 0, 0);
+;
+;     // Step 4: Permitted syscall works normally
+;     write(STDOUT_FILENO, "[+] Step 3: Sandboxed! Allowed sys_write works normally.\n", 56);
+;     write(STDOUT_FILENO, "[+] Step 4: Exiting cleanly via allowed sys_exit.\n", 49);
+;
+;     // If we tried any disallowed syscall (e.g. open, fork, socket),
+;     // kernel would instantly send SIGKILL / SIGSYS to terminate process!
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data

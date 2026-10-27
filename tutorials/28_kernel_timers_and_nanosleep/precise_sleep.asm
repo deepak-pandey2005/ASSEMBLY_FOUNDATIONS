@@ -3,6 +3,26 @@
 ; Description: High-resolution process sleep using sys_nanosleep (Syscall 35)
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <time.h>
+; #include <unistd.h>
+;
+; int main(void) {
+;     write(STDOUT_FILENO, "[+] Sleeping for 50 milliseconds via sys_nanosleep...\n", 53);
+;
+;     // struct timespec { time_t tv_sec; long tv_nsec; };
+;     struct timespec req;
+;     req.tv_sec = 0;
+;     req.tv_nsec = 50000000; // 50,000,000 nanoseconds = 50 milliseconds
+;
+;     nanosleep(&req, NULL);
+;
+;     write(STDOUT_FILENO, "[+] Woke up from sys_nanosleep! Scheduler yielded cleanly.\n", 58);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data
@@ -25,6 +45,7 @@ global _start
 
 _start:
     ; 1. Print sleep start message
+    ; C equivalent: write(1, msg_start, len_start);
     mov rax, 1                          ; sys_write
     mov rdi, 1                          ; stdout
     lea rsi, [msg_start]
@@ -34,15 +55,15 @@ _start:
     ; --------------------------------------------------------------------------
     ; 2. CALL SYS_NANOSLEEP: sys_nanosleep(req, rem)
     ; Syscall: 35
-    ; RDI = const struct timespec *req
-    ; RSI = struct timespec *rem (NULL if not interrupted)
+    ; C equivalent: nanosleep(&sleep_time, NULL);
     ; --------------------------------------------------------------------------
-    mov rax, 35                         ; sys_nanosleep
-    lea rdi, [sleep_time]
+    mov rax, 35                         ; sys_nanosleep (35)
+    lea rdi, [sleep_time]               ; const struct timespec *req
     xor rsi, rsi                        ; rem = NULL
     syscall
 
     ; 3. Print wake-up confirmation
+    ; C equivalent: write(1, msg_done, len_done);
     mov rax, 1                          ; sys_write
     mov rdi, 1                          ; stdout
     lea rsi, [msg_done]
@@ -50,6 +71,7 @@ _start:
     syscall
 
     ; Clean Exit
+    ; C equivalent: _exit(0);
     mov rax, 60
     xor rdi, rdi
     syscall
