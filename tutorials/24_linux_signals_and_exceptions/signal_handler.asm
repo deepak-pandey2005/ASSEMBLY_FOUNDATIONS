@@ -3,6 +3,34 @@
 ; Description: Registers a custom signal handler for SIGUSR1 via sys_rt_sigaction
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <signal.h>
+; #include <unistd.h>
+; #include <string.h>
+;
+; void sigusr1_handler(int sig) {
+;     const char msg[] = "[+] Signal SIGUSR1 successfully intercepted and handled!\n";
+;     write(STDOUT_FILENO, msg, sizeof(msg) - 1);
+; }
+;
+; int main(void) {
+;     // 1. Install signal handler for SIGUSR1 (signal 10)
+;     struct sigaction sa;
+;     memset(&sa, 0, sizeof(sa));
+;     sa.sa_handler = sigusr1_handler;
+;     sigaction(SIGUSR1, &sa, NULL);
+;
+;     write(STDOUT_FILENO, "[+] Installing custom signal handler for SIGUSR1 (10)...\n", 57);
+;
+;     // 2. Raise SIGUSR1 to self
+;     kill(getpid(), SIGUSR1);
+;
+;     write(STDOUT_FILENO, "[+] Process resumed after signal handling. Exiting cleanly.\n", 59);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data
@@ -33,14 +61,16 @@ global _start
 ; ------------------------------------------------------------------------------
 ; Signal Restorer Trampoline: sys_rt_sigreturn (Syscall 15)
 ; Mandatory on x86_64 Linux when using SA_RESTORER
+; C equivalent: void restore_rt(void) { syscall(SYS_rt_sigreturn); }
 ; ------------------------------------------------------------------------------
 restore_trampoline:
-    mov rax, 15                         ; sys_rt_sigreturn
+    mov rax, 15                         ; sys_rt_sigreturn (15)
     syscall
 
 ; ------------------------------------------------------------------------------
 ; Custom Signal Handler for SIGUSR1
 ; Arguments passed by kernel: RDI = signal number (10)
+; C equivalent: void sigusr1_handler(int sig)
 ; ------------------------------------------------------------------------------
 sigusr1_handler:
     ; Print message from inside signal handler
@@ -51,6 +81,9 @@ sigusr1_handler:
     syscall
     ret                                 ; Returns to restorer trampoline
 
+; ------------------------------------------------------------------------------
+; Program Entry Point: int main(void)
+; ------------------------------------------------------------------------------
 _start:
     ; 1. Print installation message
     mov rax, 1
@@ -59,35 +92,25 @@ _start:
     mov rdx, len_install
     syscall
 
-    ; --------------------------------------------------------------------------
-    ; 2. REGISTER SIGNAL HANDLER: sys_rt_sigaction(signum, &act, &oldact, sigsetsize)
-    ; Syscall: 13
-    ; RDI = signum (SIGUSR1 = 10)
-    ; RSI = &act
-    ; RDX = NULL (oldact)
-    ; R10 = sizeof(sigset_t) = 8
-    ; --------------------------------------------------------------------------
-    mov rax, 13                         ; sys_rt_sigaction
-    mov rdi, 10                         ; SIGUSR1
-    lea rsi, [act]                      ; struct sigaction
+    ; 2. Register Signal Handler: sys_rt_sigaction(sig=10, act=&act, oldact=0, sigsetsize=8)
+    ; C equivalent: sigaction(SIGUSR1, &act, NULL);
+    mov rax, 13                         ; sys_rt_sigaction (13)
+    mov rdi, 10                         ; SIGUSR1 = 10
+    lea rsi, [act]                       ; pointer to struct sigaction
     xor rdx, rdx                        ; oldact = NULL
-    mov r10, 8                          ; sigsetsize = 8
+    mov r10, 8                          ; sizeof(sigset_t) = 8 bytes
     syscall
 
-    ; --------------------------------------------------------------------------
-    ; 3. SEND SIGNAL TO OURSELVES: sys_kill(pid, sig)
-    ; Syscall: 62
-    ; RDI = pid (0 means self process group)
-    ; RSI = SIGUSR1 (10)
-    ; --------------------------------------------------------------------------
+    ; 3. Trigger Signal by sending SIGUSR1 to our own PID: sys_kill(pid, sig)
+    ; C equivalent: kill(getpid(), SIGUSR1);
+    mov rax, 39                         ; sys_getpid
+    syscall
+    mov rdi, rax                        ; rdi = self pid
+    mov rsi, 10                         ; rsi = SIGUSR1 (10)
     mov rax, 62                         ; sys_kill
-    xor rdi, rdi                        ; pid = 0 (self)
-    mov rsi, 10                         ; SIGUSR1
     syscall
 
-    ; --------------------------------------------------------------------------
-    ; 4. RESUME NORMAL EXECUTION
-    ; --------------------------------------------------------------------------
+    ; 4. Execution resumes here after signal handler finishes!
     mov rax, 1
     mov rdi, 1
     lea rsi, [msg_done]
