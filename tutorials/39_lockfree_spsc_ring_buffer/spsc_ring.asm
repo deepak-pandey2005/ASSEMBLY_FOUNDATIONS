@@ -7,6 +7,59 @@
 ;               x86-64 TSO memory ordering, pause instruction spin-waiting,
 ;               and streaming 1,000,000 elements across concurrent kernel threads.
 ; Zero C runtime / libc dependencies. Pure Linux system calls.
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #define _GNU_SOURCE
+; #include <sched.h>
+; #include <sys/mman.h>
+; #include <unistd.h>
+; #include <stdint.h>
+; #include <immintrin.h> // _mm_pause
+;
+; #define RING_CAPACITY 1024
+; #define RING_MASK (RING_CAPACITY - 1)
+; #define TOTAL_ITEMS 1000000
+;
+; // Align head and tail to distinct 64-byte L1 CPU cache lines to prevent false sharing
+; static uint64_t ring_slots[RING_CAPACITY];
+; static alignas(64) volatile uint64_t producer_tail = 0;
+; static alignas(64) volatile uint64_t consumer_head = 0;
+; static alignas(64) volatile uint64_t consumer_sum  = 0;
+;
+; static int consumer_thread(void *arg) {
+;     uint64_t local_sum = 0;
+;     for (int i = 0; i < TOTAL_ITEMS; i++) {
+;         uint64_t head = consumer_head;
+;         while (head == producer_tail) {
+;             _mm_pause(); // Queue empty: spin-wait
+;         }
+;         local_sum += ring_slots[head & RING_MASK];
+;         consumer_head = head + 1; // Release slot
+;     }
+;     consumer_sum = local_sum;
+;     _exit(0);
+; }
+;
+; int main(void) {
+;     void *stack = mmap(NULL, 65536, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+;     clone(consumer_thread, (char *)stack + 65536,
+;           CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD, NULL);
+;
+;     // Producer loop: Stream 1,000,000 items with zero mutexes or locks
+;     for (uint64_t item = 1; item <= TOTAL_ITEMS; item++) {
+;         uint64_t tail = producer_tail;
+;         while ((tail - consumer_head) >= RING_CAPACITY) {
+;             _mm_pause(); // Queue full: spin-wait
+;         }
+;         ring_slots[tail & RING_MASK] = item;
+;         producer_tail = tail + 1; // Publish slot
+;     }
+;     while (consumer_head < TOTAL_ITEMS) _mm_pause();
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start

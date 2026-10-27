@@ -5,6 +5,63 @@
 ;               via sys_perf_event_open (syscall 298), measuring hardware CPU cycles,
 ;               instructions retired, and calculating Instructions-Per-Cycle (IPC).
 ; Zero C runtime / libc dependencies. Pure Linux system calls.
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <linux/perf_event.h>
+; #include <sys/syscall.h>
+; #include <sys/ioctl.h>
+; #include <unistd.h>
+; #include <stdint.h>
+;
+; int main(void) {
+;     struct perf_event_attr attr_inst = {0}, attr_cycl = {0};
+;
+;     // Configure instructions retired counter
+;     attr_inst.type = PERF_TYPE_HARDWARE;
+;     attr_inst.size = sizeof(attr_inst); // 144 bytes
+;     attr_inst.config = PERF_COUNT_HW_INSTRUCTIONS;
+;     attr_inst.disabled = 1;
+;     attr_inst.exclude_kernel = 1;
+;     attr_inst.exclude_hv = 1;
+;
+;     // Configure CPU hardware cycles counter
+;     attr_cycl.type = PERF_TYPE_HARDWARE;
+;     attr_cycl.size = sizeof(attr_cycl);
+;     attr_cycl.config = PERF_COUNT_HW_CPU_CYCLES;
+;     attr_cycl.disabled = 1;
+;     attr_cycl.exclude_kernel = 1;
+;     attr_cycl.exclude_hv = 1;
+;
+;     // Open counters via sys_perf_event_open (syscall 298)
+;     int fd_inst = syscall(SYS_perf_event_open, &attr_inst, 0, -1, -1, 0);
+;     int fd_cycl = syscall(SYS_perf_event_open, &attr_cycl, 0, -1, -1, 0);
+;
+;     // Reset and enable counters via ioctl
+;     ioctl(fd_inst, PERF_EVENT_IOC_RESET, 0);
+;     ioctl(fd_cycl, PERF_EVENT_IOC_RESET, 0);
+;     ioctl(fd_inst, PERF_EVENT_IOC_ENABLE, 0);
+;     ioctl(fd_cycl, PERF_EVENT_IOC_ENABLE, 0);
+;
+;     // Run compute benchmark workload (1,000,000 iterations)
+;     // ...
+;
+;     // Disable counters and read 64-bit counts
+;     ioctl(fd_inst, PERF_EVENT_IOC_DISABLE, 0);
+;     ioctl(fd_cycl, PERF_EVENT_IOC_DISABLE, 0);
+;     uint64_t count_inst = 0, count_cycl = 0;
+;     read(fd_inst, &count_inst, sizeof(uint64_t));
+;     read(fd_cycl, &count_cycl, sizeof(uint64_t));
+;
+;     close(fd_inst);
+;     close(fd_cycl);
+;
+;     // Compute Instructions-Per-Cycle (IPC)
+;     double ipc = (double)count_inst / (double)count_cycl;
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start

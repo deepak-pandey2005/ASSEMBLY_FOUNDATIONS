@@ -1,5 +1,43 @@
 ; ==============================================================================
 ; Tutorial 40: Anonymous In-Memory Execution (sys_memfd_create & sys_execveat)
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #define _GNU_SOURCE
+; #include <sys/mman.h>
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <sys/wait.h>
+; #include <sys/syscall.h>
+;
+; int main(void) {
+;     // 1. Create anonymous in-memory file descriptor with sealing enabled
+;     int fd = syscall(SYS_memfd_create, "anon_elf", MFD_ALLOW_SEALING);
+;
+;     // 2. Write handcrafted 64-bit ELF binary into RAM
+;     write(fd, elf_payload, sizeof(elf_payload));
+;
+;     // 3. Seal the in-memory binary to make it immutable
+;     fcntl(fd, F_ADD_SEALS, F_SEAL_WRITE | F_SEAL_SHRINK | F_SEAL_GROW);
+;
+;     // 4. Fork child process to execute the in-memory payload
+;     pid_t pid = fork();
+;     if (pid == 0) {
+;         char *argv[] = {"[anon_payload]", NULL};
+;         char *envp[] = {NULL};
+;         // Execute directly from open file descriptor (0 disk footprints)
+;         syscall(SYS_execveat, fd, "", argv, envp, AT_EMPTY_PATH);
+;         _exit(1);
+;     }
+;
+;     // 5. Parent waits for child and validates exit code 42
+;     int status;
+;     waitpid(pid, &status, 0);
+;     close(fd);
+;     _exit(WEXITSTATUS(status) == 42 ? 0 : 1);
+; }
 ; ==============================================================================
 ;
 ; Concepts Covered:

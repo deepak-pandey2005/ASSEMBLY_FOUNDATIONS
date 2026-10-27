@@ -6,6 +6,49 @@
 ;               submitting asynchronous operations via sys_io_uring_enter,
 ;               and reaping Completion Queue Entries (CQEs).
 ; Zero C runtime / libc dependencies. Pure Linux system calls.
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <linux/io_uring.h>
+; #include <sys/mman.h>
+; #include <sys/syscall.h>
+; #include <unistd.h>
+; #include <stdint.h>
+;
+; int main(void) {
+;     struct io_uring_params params = {0};
+;     // 1. Initialize io_uring instance with 4 submission entries
+;     int ring_fd = syscall(SYS_io_uring_setup, 4, &params);
+;
+;     // 2. Memory-map Submission Queue (SQ) ring
+;     size_t sq_sz = params.sq_off.array + params.sq_entries * sizeof(uint32_t);
+;     void *sq_ptr = mmap(NULL, sq_sz, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
+;                         ring_fd, IORING_OFF_SQ_RING);
+;
+;     // 3. Memory-map Submission Queue Entries (SQEs) buffer
+;     size_t sqes_sz = params.sq_entries * sizeof(struct io_uring_sqe);
+;     struct io_uring_sqe *sqes = mmap(NULL, sqes_sz, PROT_READ | PROT_WRITE,
+;                                      MAP_SHARED | MAP_POPULATE, ring_fd, IORING_OFF_SQES);
+;
+;     // 4. Memory-map Completion Queue (CQ) ring
+;     size_t cq_sz = params.cq_off.cqes + params.cq_entries * sizeof(struct io_uring_cqe);
+;     void *cq_ptr = mmap(NULL, cq_sz, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
+;                         ring_fd, IORING_OFF_CQ_RING);
+;
+;     // 5. Submit SQE #1: NOP operation
+;     // sqes[0].opcode = IORING_OP_NOP; sqes[0].user_data = 0x1337BEEF;
+;     // Submit SQE #2: Asynchronous write operation
+;     // sqes[1].opcode = IORING_OP_WRITE; sqes[1].fd = 1; sqes[1].addr = payload;
+;
+;     // 6. Enter kernel to submit 2 SQEs and wait for 2 completions
+;     syscall(SYS_io_uring_enter, ring_fd, 2, 2, IORING_ENTER_GETEVENTS, NULL, 0);
+;
+;     // 7. Reap CQEs from completion ring
+;     // Clean up mmap regions and close ring_fd
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start

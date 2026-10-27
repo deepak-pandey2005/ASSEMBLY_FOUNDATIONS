@@ -1,5 +1,50 @@
 ; ==============================================================================
 ; Tutorial 41: Linux Process Tracing & Syscall Interception (sys_ptrace)
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/ptrace.h>
+; #include <sys/types.h>
+; #include <sys/wait.h>
+; #include <sys/user.h>
+; #include <unistd.h>
+; #include <signal.h>
+;
+; int main(void) {
+;     pid_t pid = fork();
+;     if (pid == 0) {
+;         // Child authorizes debugging and stops itself
+;         ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+;         kill(getpid(), SIGSTOP);
+;         // Workload executed under debugger surveillance
+;         write(1, "Hello from child!\n", 18);
+;         _exit(42);
+;     }
+;
+;     // Parent debugger:
+;     int status;
+;     waitpid(pid, &status, 0); // Intercept SIGSTOP
+;
+;     // 1. Read child hardware register state (RIP, RSP, RAX, RDI)
+;     struct user_regs_struct regs;
+;     ptrace(PTRACE_GETREGS, pid, NULL, &regs);
+;
+;     // 2. Execute single CPU instruction via hardware trap flag
+;     ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
+;     waitpid(pid, &status, 0);
+;
+;     // 3. Intercept system call boundaries
+;     ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
+;     waitpid(pid, &status, 0);
+;     ptrace(PTRACE_GETREGS, pid, NULL, &regs); // regs.orig_rax holds syscall number
+;
+;     // 4. Resume child to clean exit
+;     ptrace(PTRACE_CONT, pid, NULL, NULL);
+;     waitpid(pid, &status, 0);
+;     _exit(WEXITSTATUS(status) == 42 ? 0 : 1);
+; }
 ; ==============================================================================
 ;
 ; Concepts & Architecture:

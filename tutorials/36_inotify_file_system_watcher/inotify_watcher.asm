@@ -18,6 +18,44 @@
 ;     3. Read and verify inotify IN_CREATE event packet
 ;     4. Delete temporary file via sys_unlink
 ;     5. Clean up watch and inotify instance
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/inotify.h>
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <stdio.h>
+;
+; int main(void) {
+;     // 1. Initialize an inotify instance
+;     int ifd = inotify_init1(0);
+;
+;     // 2. Add watch descriptor for current working directory "."
+;     int wd = inotify_add_watch(ifd, ".", IN_CREATE | IN_MODIFY | IN_DELETE);
+;
+;     // 3. Trigger a file creation event
+;     int tmpfd = open("inotify_test.tmp", O_CREAT | O_WRONLY, 0644);
+;     close(tmpfd);
+;
+;     // 4. Read binary struct inotify_event packet from inotify descriptor
+;     char buffer[1024];
+;     ssize_t bytes_read = read(ifd, buffer, sizeof(buffer));
+;
+;     struct inotify_event *event = (struct inotify_event *)buffer;
+;     // Inspect event details:
+;     // event->wd    : watch descriptor
+;     // event->mask  : IN_CREATE (0x100)
+;     // event->len   : name length
+;     // event->name  : "inotify_test.tmp"
+;
+;     // 5. Clean up temporary test file and watch descriptor
+;     unlink("inotify_test.tmp");
+;     inotify_rm_watch(ifd, wd);
+;     close(ifd);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start
