@@ -62,6 +62,7 @@ section .data
         dd 0                            ; sin_addr: 0.0.0.0 (INADDR_ANY)
         dq 0                            ; sin_zero padding (8 bytes)
     server_addr_len: equ $ - server_addr
+    reuse_val: dd 1
 
     http_response:
         db "HTTP/1.1 200 OK", 13, 10
@@ -96,6 +97,16 @@ _start:
     cmp rax, 0
     jl  .error
     mov [server_fd], rax
+
+    ; Set SO_REUSEADDR (level: SOL_SOCKET=1, optname: SO_REUSEADDR=2, val: 1)
+    ; sys_setsockopt(sockfd, level, optname, optval, optlen)
+    mov rax, 54                         ; SYS_setsockopt
+    mov rdi, [server_fd]
+    mov rsi, 1                          ; SOL_SOCKET = 1
+    mov rdx, 2                          ; SO_REUSEADDR = 2
+    lea r10, [rel reuse_val]
+    mov r8, 4                           ; sizeof(int) = 4
+    syscall
 
     ; --------------------------------------------------------------------------
     ; 2. BIND SOCKET: sys_bind(sockfd, &server_addr, addrlen)

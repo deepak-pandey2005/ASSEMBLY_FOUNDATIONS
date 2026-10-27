@@ -90,19 +90,30 @@ PROJECT_DIRS := \
 	projects/11_tar_archiver \
 	projects/12_brainfuck_jit
 
-.PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
+MODULE_DIRS := $(sort $(wildcard tutorials/*/))
+
+.PHONY: all clean help test test-network test-epoll test-ffi projects test-projects modules test-modules
 
 all: $(PROGRAMS) projects
 	@echo "=========================================================="
-	@echo " All 40 Tutorials & 12 Projects Built Successfully!       "
+	@echo " All 41 Tutorials & 12 Projects Built Successfully!       "
 	@echo "=========================================================="
 
 $(BIN_DIR) $(OBJ_DIR):
 	@mkdir -p $@
 
 # ------------------------------------------------------------------------------
-# Build Full-Scale Standalone Projects
+# Build Standalone Tutorial Modules & Projects
 # ------------------------------------------------------------------------------
+modules:
+	@for dir in $(MODULE_DIRS); do \
+		echo "Building module: $$dir"; \
+		$(MAKE) -C $$dir; \
+	done
+
+test-modules:
+	@tutorials/test_all_tutorials.sh
+
 projects:
 	@for dir in $(PROJECT_DIRS); do \
 		echo "Building project: $$dir"; \
@@ -508,12 +519,20 @@ clean:
 	@for dir in $(PROJECT_DIRS); do \
 		$(MAKE) -C $$dir clean; \
 	done
+	@for dir in $(MODULE_DIRS); do \
+		$(MAKE) -C $$dir clean; \
+	done
 
 help:
 	@echo "Assembly Foundations Build Targets:"
 	@echo "  make all          - Build all 41 modules and 12 standalone projects"
+	@echo "  make modules      - Build all 41 tutorial modules in their local directories"
+	@echo "  make projects     - Build all 12 standalone projects in their local directories"
 	@echo "  make test         - Run full test suite verifying tutorials and projects"
+	@echo "  make test-modules - Run automated verification across all 41 tutorial modules"
+	@echo "  make test-projects- Run automated verification across all 12 standalone projects"
 	@echo "  make test-epoll   - Run epoll async TCP echo test"
 	@echo "  make test-network - Run pure assembly HTTP web server test"
 	@echo "  make clean        - Remove all binaries, objects, and test outputs"
 	@echo "  make debug        - Launch GDB on the debug_target binary"
+
