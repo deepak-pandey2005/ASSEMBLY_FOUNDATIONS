@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **38 progressive modules** and **10 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), RFC 1035 UDP DNS resolution, and modern Linux `io_uring` asynchronous I/O.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **38 progressive modules** and **11 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), RFC 1035 UDP DNS resolution, modern Linux `io_uring` asynchronous I/O, and POSIX `tar` archive serialization.
 
 ---
 
@@ -86,13 +86,14 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **08** | [Streaming JSON Parser](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/08_json_parser/README.md) | Data Serialization | RFC 8259 streaming tokenizer/lexer, scalar/string parser, zero-copy key lookup |
 | **09** | [CHIP-8 Virtual Machine](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/09_chip8_emulator/README.md) | Virtualization & Emulation | Full 4KB RAM, 16 registers, font sprites, 64x32 display rendering, opcode decoder & runner |
 | **10** | [RFC 1035 DNS Resolver](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/10_dns_client/README.md) | Internet Protocols | Raw UDP sockets (`SOCK_DGRAM`), binary DNS header/QNAME encoding, compression pointer parsing, IPv4 address resolution |
+| **11** | [POSIX tar Archiver & Extractor](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/11_tar_archiver/README.md) | Archive Systems | POSIX ustar 512-byte block format, header checksum calculation, octal serialization, GNU tar interoperability |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 38 tutorial programs and 10 standalone projects
+make all          # Compiles and links all 38 tutorial programs and 11 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost

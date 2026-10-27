@@ -83,7 +83,8 @@ PROJECT_DIRS := \
 	projects/07_mmap_key_value_store \
 	projects/08_json_parser \
 	projects/09_chip8_emulator \
-	projects/10_dns_client
+	projects/10_dns_client \
+	projects/11_tar_archiver
 
 .PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
 
@@ -466,7 +467,7 @@ test: all test-projects test-epoll
 	@echo "=== Testing Modern Linux io_uring Asynchronous I/O ==="
 	./$(BIN_DIR)/io_uring_demo
 	@echo "=========================================================="
-	@echo " ALL 38 MODULES & 10 STANDALONE PROJECTS PASSED PERFECTLY!"
+	@echo " ALL 38 MODULES & 11 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server
