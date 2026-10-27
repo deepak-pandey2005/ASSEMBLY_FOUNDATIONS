@@ -2,7 +2,7 @@
 NASM ?= nasm
 NASMFLAGS ?= -f elf64 -g -F dwarf -w-implicit-abs-deprecated
 LD ?= ld
-LDFLAGS ?=
+LDFLAGS ?= -z noexecstack
 
 CC ?= gcc
 CFLAGS ?= -Wall -O2
@@ -13,7 +13,7 @@ asm_math.o: asm_math.asm
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 libasm_math.so: asm_math.o
-	$(LD) -shared $< -o $@
+	$(LD) $(LDFLAGS) -shared $< -o $@
 
 test_c: test_c.c asm_math.o
 	$(CC) $(CFLAGS) test_c.c asm_math.o -o $@

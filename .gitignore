@@ -1,4 +1,8 @@
 bin/
 obj/
-*.o/
+*.o
+*.so
+*.bin
 *.ppm
+*.wav
+*.mkv

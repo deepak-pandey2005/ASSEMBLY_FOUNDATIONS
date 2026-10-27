@@ -4,9 +4,11 @@ import os
 import sys
 
 def main():
-    so_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../bin/libasm_math.so"))
+    local_so = os.path.abspath(os.path.join(os.path.dirname(__file__), "libasm_math.so"))
+    bin_so = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../bin/libasm_math.so"))
+    so_path = local_so if os.path.exists(local_so) else bin_so
     if not os.path.exists(so_path):
-        print(f"[-] Shared library not found at: {so_path}")
+        print(f"[-] Shared library not found at: {local_so} or {bin_so}")
         sys.exit(1)
 
     lib = ctypes.CDLL(so_path)
