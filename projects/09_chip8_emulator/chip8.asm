@@ -10,6 +10,38 @@
 ; - 16-level call stack + 8-bit Stack Pointer SP
 ; - 64x32 monochrome display buffer (rendered via ANSI block characters)
 ; - Big-Endian 16-bit opcode execution cycle (Fetch -> Decode -> Execute)
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <unistd.h>
+; #include <stdint.h>
+; #include <string.h>
+;
+; typedef struct {
+;     uint8_t memory[4096];
+;     uint8_t V[16];
+;     uint16_t I;
+;     uint16_t pc;
+;     uint16_t stack[16];
+;     uint8_t sp;
+;     uint8_t gfx[64 * 32];
+; } chip8_vm_t;
+;
+; void chip8_step(chip8_vm_t *vm) {
+;     // Fetch 16-bit big-endian opcode
+;     uint16_t op = (vm->memory[vm->pc] << 8) | vm->memory[vm->pc + 1];
+;     vm->pc += 2;
+;
+;     // Decode and execute:
+;     // 0x00E0: CLS (clear screen)
+;     // 0x1nnn: JP addr (jump)
+;     // 0x6xkk: LD Vx, byte
+;     // 0x7xkk: ADD Vx, byte
+;     // 0xAnnn: LD I, addr
+;     // 0xDxyn: DRW Vx, Vy, nibble (draw sprite and check collision)
+; }
 ; ==============================================================================
 
 global _start

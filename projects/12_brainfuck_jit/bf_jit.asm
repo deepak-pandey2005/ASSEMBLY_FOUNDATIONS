@@ -1,5 +1,37 @@
 ; ==============================================================================
 ; Standalone Project 12: Pure Assembly Brainfuck JIT (Just-In-Time) Compiler
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/mman.h>
+; #include <unistd.h>
+; #include <stdint.h>
+; #include <string.h>
+;
+; int main(int argc, char **argv) {
+;     // 1. Allocate executable memory for JIT machine code
+;     uint8_t *code = mmap(NULL, 65536, PROT_READ | PROT_WRITE | PROT_EXEC,
+;                          MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+;     uint8_t tape[65536] = {0};
+;
+;     // 2. Compile Brainfuck instructions directly to native x86-64 machine code:
+;     // '+' -> add byte [r12], count     (machine bytes: 80 04 24 <N>)
+;     // '-' -> sub byte [r12], count     (machine bytes: 80 2C 24 <N>)
+;     // '>' -> add r12, count            (machine bytes: 49 83 C4 <N>)
+;     // '<' -> sub r12, count            (machine bytes: 49 83 EC <N>)
+;     // '.' -> inline sys_write(1, r12, 1)
+;     // ',' -> inline sys_read(0, r12, 1)
+;     // '[' and ']' -> backpatched conditional jumps (0x0F 0x84 / 0x0F 0x85)
+;
+;     // 3. Execute compiled native JIT function pointer directly:
+;     void (*jit_function)(uint8_t *tape_ptr) = (void *)code;
+;     jit_function(tape);
+;
+;     munmap(code, 65536);
+;     _exit(0);
+; }
 ; ==============================================================================
 ;
 ; Concepts & Architecture:

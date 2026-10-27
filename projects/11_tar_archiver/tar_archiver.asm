@@ -5,6 +5,41 @@
 ;               Creates, lists, and extracts standard uncompressed .tar archives.
 ;               Fully interoperable with the Linux GNU tar utility.
 ; Zero external libraries or C runtime dependencies. Pure Linux system calls.
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/stat.h>
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <string.h>
+; #include <stdint.h>
+;
+; // 512-byte POSIX ustar archive header
+; struct posix_header {
+;     char name[100];     // File name
+;     char mode[8];       // Permissions (octal)
+;     char uid[8];        // User ID (octal)
+;     char gid[8];        // Group ID (octal)
+;     char size[12];      // File size in bytes (octal)
+;     char mtime[12];     // Modification time (octal)
+;     char chksum[8];     // Header checksum (octal)
+;     char typeflag;      // '0' = regular file
+;     char linkname[100];
+;     char magic[6];      // "ustar\0"
+;     char version[2];    // "00"
+;     char uname[32]; char gname[32];
+;     char devmajor[8]; char devminor[8]; char prefix[155];
+; };
+;
+; int main(int argc, char **argv) {
+;     // Handles CLI commands:
+;     // 1. "create" <archive.tar> <files...>: Read stats, write headers, copy data padded to 512B
+;     // 2. "list"   <archive.tar>: Scan 512B blocks, print file names and sizes
+;     // 3. "extract"<archive.tar>: Read header, open target file, write payload bytes
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start
