@@ -72,7 +72,8 @@ PROGRAMS := \
 	inotify_watcher \
 	perf_counters \
 	io_uring_demo \
-	spsc_ring
+	spsc_ring \
+	memfd_exec
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -407,6 +408,12 @@ $(OBJ_DIR)/spsc_ring.o: tutorials/39_lockfree_spsc_ring_buffer/spsc_ring.asm | $
 spsc_ring: $(OBJ_DIR)/spsc_ring.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/memfd_exec.o: tutorials/40_anonymous_memfd_execution/memfd_exec.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+memfd_exec: $(OBJ_DIR)/memfd_exec.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -475,8 +482,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/io_uring_demo
 	@echo "=== Testing Lock-Free SPSC Ring Buffer Concurrency ==="
 	./$(BIN_DIR)/spsc_ring
+	@echo "=== Testing Anonymous Memory Execution (memfd_create & execveat) ==="
+	./$(BIN_DIR)/memfd_exec
 	@echo "=========================================================="
-	@echo " ALL 39 MODULES & 11 STANDALONE PROJECTS PASSED PERFECTLY!"
+	@echo " ALL 40 MODULES & 11 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server
@@ -507,7 +516,7 @@ clean:
 
 help:
 	@echo "Assembly Foundations Build Targets:"
-	@echo "  make all          - Build all 30 modules and 5 standalone projects"
+	@echo "  make all          - Build all 40 modules and 11 standalone projects"
 	@echo "  make test         - Run full test suite verifying tutorials and projects"
 	@echo "  make test-epoll   - Run epoll async TCP echo test"
 	@echo "  make test-network - Run pure assembly HTTP web server test"
