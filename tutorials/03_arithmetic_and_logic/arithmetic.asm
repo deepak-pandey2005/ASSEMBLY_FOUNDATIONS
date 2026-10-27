@@ -3,13 +3,51 @@
 ; Description: Addition, subtraction, multi-word carry, multiplication and division
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <stdint.h>
+; #include <unistd.h>
+;
+; static int64_t val1 = 100;
+; static int64_t val2 = 30;
+;
+; static int64_t sum;
+; static int64_t diff;
+; static int64_t product;
+; static int64_t quotient;
+; static int64_t remainder;
+;
+; int main(void) {
+;     // 1. Basic Addition & Subtraction
+;     sum  = val1 + val2;             // 100 + 30 = 130
+;     diff = val1 - val2;             // 100 - 30 = 70
+;
+;     // 2. Multiplication
+;     product = val1 * val2;          // 100 * 30 = 3000
+;
+;     // 3. Division & Remainder
+;     quotient  = val1 / val2;        // 100 / 30 = 3
+;     remainder = val1 % val2;        // 100 % 30 = 10
+;
+;     // 4. 128-bit Addition with Carry (__int128 in GCC/Clang)
+;     unsigned __int128 big_a = 0xFFFFFFFFFFFFFFFFULL;
+;     unsigned __int128 big_b = 1;
+;     unsigned __int128 big_sum = big_a + big_b; // lower 64-bit = 0, upper 64-bit carry = 1
+;
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data
+    ; C equivalent: static int64_t val1 = 100;
     val1: dq 100
+    ; C equivalent: static int64_t val2 = 30;
     val2: dq 30
 
 section .bss
+    ; C equivalent: static int64_t sum, diff, product, quotient, remainder;
     sum:       resq 1
     diff:      resq 1
     product:   resq 1
@@ -20,39 +58,49 @@ section .text
 global _start
 
 _start:
+    ; --------------------------------------------------------------------------
     ; 1. Basic Addition & Subtraction
-    mov rax, [val1]             ; rax = 100
-    add rax, [val2]             ; rax = 130
-    mov [sum], rax
+    ; C equivalent: sum = val1 + val2; diff = val1 - val2;
+    ; --------------------------------------------------------------------------
+    mov rax, [val1]             ; int64_t rax = val1; (100)
+    add rax, [val2]             ; rax += val2;        (100 + 30 = 130)
+    mov [sum], rax              ; sum = rax;
 
-    mov rax, [val1]             ; rax = 100
-    sub rax, [val2]             ; rax = 70
-    mov [diff], rax
+    mov rax, [val1]             ; rax = val1;         (100)
+    sub rax, [val2]             ; rax -= val2;        (100 - 30 = 70)
+    mov [diff], rax             ; diff = rax;
 
+    ; --------------------------------------------------------------------------
     ; 2. Multiplication (IMUL - signed)
-    ; 2-operand form: dest = dest * src
-    mov rax, [val1]
-    imul rax, [val2]            ; rax = 100 * 30 = 3000
-    mov [product], rax
-
-    ; 3. Division (IDIV - signed 64-bit)
-    ; Dividend must be in RDX:RAX
+    ; C equivalent: product = val1 * val2;
+    ; --------------------------------------------------------------------------
     mov rax, [val1]             ; rax = 100
-    cqo                         ; Sign-extend RAX into RDX:RAX (RDX becomes 0 for positive)
-    mov rbx, [val2]             ; divisor = 30
-    idiv rbx                    ; rax = quotient (3), rdx = remainder (10)
+    imul rax, [val2]            ; rax = rax * val2; (100 * 30 = 3000)
+    mov [product], rax          ; product = 3000
 
-    mov [quotient], rax         ; store 3
-    mov [remainder], rdx        ; store 10
+    ; --------------------------------------------------------------------------
+    ; 3. Division (IDIV - signed 64-bit)
+    ; C equivalent: quotient = val1 / val2; remainder = val1 % val2;
+    ; --------------------------------------------------------------------------
+    mov rax, [val1]             ; rax = 100 (dividend lower 64 bits)
+    cqo                         ; Convert Quadword to Octoword: sign-extends RAX into RDX:RAX
+    mov rbx, [val2]             ; rbx = 30  (divisor)
+    idiv rbx                    ; RDX:RAX / RBX -> RAX = quotient (3), RDX = remainder (10)
 
+    mov [quotient], rax         ; quotient = 3
+    mov [remainder], rdx        ; remainder = 10
+
+    ; --------------------------------------------------------------------------
     ; 4. Multi-precision Addition with Carry (ADC)
-    ; Example: Adding two 128-bit integers represented by two quadwords each
-    mov rax, 0xFFFFFFFFFFFFFFFF ; Max 64-bit int
-    add rax, 1                  ; Causes unsigned overflow -> CF (Carry Flag) is set to 1, RAX = 0
+    ; C equivalent: unsigned __int128 lower carry into upper word
+    ; --------------------------------------------------------------------------
+    mov rax, 0xFFFFFFFFFFFFFFFF ; Max 64-bit unsigned integer (UINT64_MAX)
+    add rax, 1                  ; rax = 0; Overflow causes CF (Carry Flag) = 1
     mov rbx, 10
-    adc rbx, 0                  ; rbx = 10 + 0 + CF = 11
+    adc rbx, 0                  ; rbx = rbx + 0 + CF = 10 + 0 + 1 = 11
 
-    ; Exit
-    mov rax, 60
-    xor rdi, rdi
+    ; Clean exit
+    ; C equivalent: _exit(0);
+    mov rax, 60                 ; rax = SYS_exit (60)
+    xor rdi, rdi                ; rdi = 0
     syscall
