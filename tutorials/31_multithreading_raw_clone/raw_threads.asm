@@ -8,6 +8,53 @@
 ; - Top-of-stack alignment (x86-64 stack grows downward)
 ; - Passing arguments/work to the child thread via shared memory
 ; - Atomic coordination (spin-wait / atomic exchange) between threads
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #define _GNU_SOURCE
+; #include <sched.h>
+; #include <sys/mman.h>
+; #include <unistd.h>
+; #include <stdint.h>
+; #include <immintrin.h> // _mm_pause
+;
+; #define STACK_SIZE 16384
+; static volatile uint64_t shared_counter = 0;
+; static volatile uint64_t thread_finished = 0;
+;
+; static int worker_thread(void *arg) {
+;     // Equivalent to .worker_thread_entry:
+;     write(1, "[Worker Thread] Hello from the raw kernel thread! Computing sum...\n", 67);
+;     for (int i = 0; i < 10000; i++) {
+;         // Atomic increment across shared memory space
+;         __atomic_fetch_add(&shared_counter, 1, __ATOMIC_SEQ_CST); // lock inc
+;     }
+;     write(1, "[Worker Thread] Computation complete. Exiting thread.\n", 53);
+;     thread_finished = 1;
+;     _exit(0); // Under CLONE_THREAD, sys_exit(60) terminates only this thread
+; }
+;
+; int main(void) {
+;     write(1, "[Main Thread] Process started. Spawning worker thread via sys_clone...\n", 71);
+;
+;     // 1. Allocate dedicated thread stack via anonymous mmap
+;     void *stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
+;                        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+;     void *stack_top = (char *)stack + STACK_SIZE - 16; // 16-byte ABI stack alignment
+;
+;     // 2. Spawn thread sharing memory and file descriptors
+;     int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD;
+;     clone(worker_thread, stack_top, flags, NULL);
+;
+;     // 3. Main thread spin-waits on completion flag
+;     while (!thread_finished) {
+;         _mm_pause(); // Low-latency CPU pipeline pause
+;     }
+;     // Format and print shared_counter
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start

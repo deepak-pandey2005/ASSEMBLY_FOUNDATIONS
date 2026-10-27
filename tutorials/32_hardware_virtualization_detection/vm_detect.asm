@@ -8,6 +8,47 @@
 ; 3. Bare-metal hardware virtualization capabilities:
 ;    - Intel VT-x (VMX) support via CPUID.1:ECX[5]
 ;    - AMD-V (SVM) support via CPUID.0x80000001:ECX[2]
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <cpuid.h>
+; #include <unistd.h>
+; #include <string.h>
+;
+; int main(void) {
+;     unsigned int eax, ebx, ecx, edx;
+;
+;     // 1. Query CPUID leaf 1: check hypervisor bit (ECX bit 31)
+;     __cpuid(1, eax, ebx, ecx, edx);
+;     int is_vm = (ecx & (1U << 31)) != 0;
+;
+;     if (is_vm) {
+;         write(1, "[+] HYPERVISOR DETECTED: System is running inside a Virtual Machine!\n", 69);
+;         // 2. Query Hypervisor signature leaf 0x40000000
+;         __cpuid(0x40000000, eax, ebx, ecx, edx);
+;         char sig[13] = {0};
+;         memcpy(sig + 0, &ebx, 4); // "KVMK", "Micr", "VMwa", "XenV"
+;         memcpy(sig + 4, &ecx, 4); // "VMKV", "osof", "reVM", "MMXe"
+;         memcpy(sig + 8, &edx, 4); // "M",    "t Hv", "ware", "n"
+;         // write(1, sig, 12);
+;     } else {
+;         write(1, "[-] NO HYPERVISOR DETECTED: System is running directly on BARE-METAL hardware.\n", 79);
+;     }
+;
+;     // 3. Query Hardware Virtualization support:
+;     // Intel VT-x (VMX): CPUID leaf 1, ECX bit 5
+;     int vtx_supported = (ecx & (1U << 5)) != 0;
+;
+;     // AMD-V (SVM): CPUID extended function 0x80000001, ECX bit 2
+;     __cpuid(0x80000000, eax, ebx, ecx, edx);
+;     if (eax >= 0x80000001) {
+;         __cpuid(0x80000001, eax, ebx, ecx, edx);
+;         int svm_supported = (ecx & (1U << 2)) != 0;
+;     }
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start

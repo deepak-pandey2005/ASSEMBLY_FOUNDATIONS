@@ -11,6 +11,45 @@
 ; - Slow-path: sys_futex(uaddr, FUTEX_WAIT, 2, NULL, NULL, 0)
 ; - Unlock: Decrements lock. If state was 2, calls sys_futex(uaddr, FUTEX_WAKE, 1)
 ; - Multithreaded test: Spawns worker thread via sys_clone, concurrent lock/unlock
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #define _GNU_SOURCE
+; #include <linux/futex.h>
+; #include <sys/syscall.h>
+; #include <unistd.h>
+; #include <stdint.h>
+;
+; // 3-state futex word: 0 = unlocked, 1 = locked (no waiters), 2 = locked (waiters queued)
+; void futex_mutex_lock(int32_t *uaddr) {
+;     int32_t c = 0;
+;     // Fast-path: Try atomic compare-and-swap (0 -> 1) in user-space (zero syscalls!)
+;     if (__atomic_compare_exchange_n(uaddr, &c, 1, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) {
+;         return; // Acquired immediately
+;     }
+;
+;     // Slow-path: Contention detected
+;     do {
+;         // If lock was held without waiters (state 1), transition to 2 to record waiter
+;         if (c == 2 || __atomic_compare_exchange_n(uaddr, &c, 2, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) {
+;             // Kernel sleep: wait until woken up
+;             syscall(SYS_futex, uaddr, FUTEX_WAIT_PRIVATE, 2, NULL, NULL, 0);
+;         }
+;         // After wakeup, atomically exchange with 2
+;     } while ((c = __atomic_exchange_n(uaddr, 2, __ATOMIC_SEQ_CST)) != 0);
+; }
+;
+; void futex_mutex_unlock(int32_t *uaddr) {
+;     // Fast-path: Decrement lock word
+;     // If it decrements from 1 to 0, no waiters exist and we are done!
+;     if (__atomic_sub_fetch(uaddr, 1, __ATOMIC_SEQ_CST) != 0) {
+;         // Waiters exist (old value was 2), reset to 0 and wake 1 waiting thread
+;         *uaddr = 0;
+;         syscall(SYS_futex, uaddr, FUTEX_WAKE_PRIVATE, 1, NULL, NULL, 0);
+;     }
+; }
 ; ==============================================================================
 
 global _start

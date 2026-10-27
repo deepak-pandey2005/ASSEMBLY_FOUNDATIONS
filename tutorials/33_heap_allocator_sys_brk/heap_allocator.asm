@@ -9,6 +9,64 @@
 ;   offset 0  : uint64_t size       ; Payload size (bytes)
 ;   offset 8  : uint64_t is_free    ; 1 = free, 0 = allocated
 ;   offset 16 : void* next          ; Pointer to next chunk header (or 0)
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <unistd.h>
+; #include <stdint.h>
+;
+; // 24-byte block metadata header prepended before each heap payload
+; typedef struct block_header {
+;     uint64_t size;             // Payload capacity in bytes (offset 0)
+;     uint64_t is_free;          // 1 = available, 0 = allocated (offset 8)
+;     struct block_header *next; // Pointer to next block header in list (offset 16)
+; } block_header_t;
+;
+; static block_header_t *heap_head = NULL;
+; static void *current_brk = NULL;
+;
+; void *asm_malloc(uint64_t size) {
+;     // 1. Round requested size up to 8-byte boundary
+;     size = (size + 7) & ~7ULL;
+;
+;     // 2. Search free-list for a reusable block
+;     block_header_t *curr = heap_head;
+;     block_header_t *prev = NULL;
+;     while (curr) {
+;         if (curr->is_free && curr->size >= size) {
+;             curr->is_free = 0; // Mark allocated
+;             return (void *)(curr + 1); // Return pointer to payload right after header
+;         }
+;         prev = curr;
+;         curr = curr->next;
+;     }
+;
+;     // 3. No suitable free block found: expand process heap via sys_brk
+;     void *old_brk = current_brk;
+;     void *new_brk = (char *)old_brk + sizeof(block_header_t) + size;
+;     if (brk(new_brk) != 0) return NULL; // Allocation failed
+;     current_brk = new_brk;
+;
+;     // Initialize new block metadata
+;     block_header_t *new_block = (block_header_t *)old_brk;
+;     new_block->size = size;
+;     new_block->is_free = 0;
+;     new_block->next = NULL;
+;
+;     if (prev) prev->next = new_block;
+;     else heap_head = new_block;
+;
+;     return (void *)(new_block + 1);
+; }
+;
+; void asm_free(void *payload_ptr) {
+;     if (!payload_ptr) return;
+;     // Header is located exactly sizeof(block_header_t) bytes before payload
+;     block_header_t *header = (block_header_t *)payload_ptr - 1;
+;     header->is_free = 1;
+; }
 ; ==============================================================================
 
 global _start
