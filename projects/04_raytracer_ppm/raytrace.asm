@@ -3,6 +3,47 @@
 ; Description: 3D Sphere Raytracer with directional diffuse lighting in pure assembly
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <stdint.h>
+; #include <math.h>
+;
+; #define WIDTH     320
+; #define HEIGHT    320
+; #define SPHERE_Z  3000
+; #define RADIUS_SQ 1440000 // R = 1200
+;
+; // Fixed-point directional light vector
+; static const int L_x = 577, L_y = 577, L_z = -577;
+;
+; int main(void) {
+;     uint8_t img[HEIGHT][WIDTH][3];
+;
+;     for (int y = -160; y < 160; y++) {
+;         for (int x = -160; x < 160; x++) {
+;             // Ray direction D = (x * 6, y * 6, 1000)
+;             int dx = x * 6, dy = y * 6, dz = 1000;
+;             // Solve ray-sphere intersection: dot(D, D)*t^2 - 2*dz*SPHERE_Z*t + (SPHERE_Z^2 - R^2) = 0
+;             // If discriminant >= 0 (ray hits sphere):
+;             //   Compute surface normal N = (HitPoint - Center) / Radius
+;             //   Compute diffuse lighting intensity: dot(N, L)
+;             //   img[y+160][x+160] = RGB(shading, shading/2, shading/4);
+;             // Else (background sky):
+;             //   img[y+160][x+160] = RGB(20, 25, 45);
+;         }
+;     }
+;
+;     int fd = open("render.ppm", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+;     write(fd, "P6\n320 320\n255\n", 15);
+;     write(fd, img, sizeof(img));
+;     close(fd);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data

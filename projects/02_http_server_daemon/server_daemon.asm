@@ -3,6 +3,52 @@
 ; Description: Multi-route concurrent HTTP/1.1 Web Server Daemon in pure assembly
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/socket.h>
+; #include <netinet/in.h>
+; #include <unistd.h>
+; #include <string.h>
+;
+; int main(void) {
+;     // 1. Create IPv4 TCP stream socket
+;     int sfd = socket(AF_INET, SOCK_STREAM, 0);
+;
+;     // 2. Set SO_REUSEADDR to avoid address-in-use errors
+;     int opt = 1;
+;     setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+;
+;     // 3. Bind to 0.0.0.0:8080
+;     struct sockaddr_in addr = {
+;         .sin_family = AF_INET,
+;         .sin_port = htons(8080),
+;         .sin_addr.s_addr = INADDR_ANY
+;     };
+;     bind(sfd, (struct sockaddr *)&addr, sizeof(addr));
+;     listen(sfd, 10);
+;     write(1, "[+] Assembly HTTP Server Daemon online at http://0.0.0.0:8080 ...\n", 67);
+;
+;     // 4. Event loop: accept and route client connections
+;     while (1) {
+;         int cfd = accept(sfd, NULL, NULL);
+;         char req[2048];
+;         ssize_t n = read(cfd, req, sizeof(req) - 1);
+;         req[n] = '\0';
+;
+;         if (strncmp(req, "GET / ", 6) == 0 || strncmp(req, "GET /index.html", 15) == 0) {
+;             write(cfd, http_200_html, strlen(http_200_html));
+;         } else if (strncmp(req, "GET /api/status", 15) == 0) {
+;             write(cfd, http_200_json, strlen(http_200_json));
+;         } else {
+;             write(cfd, http_404, strlen(http_404));
+;         }
+;         close(cfd);
+;     }
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data

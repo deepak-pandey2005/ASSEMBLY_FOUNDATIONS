@@ -3,6 +3,44 @@
 ; Description: 16-bit stereo PCM audio synthesizer with decay envelope in pure assembly
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <stdint.h>
+;
+; #define SAMPLE_RATE    44100
+; #define DURATION_SEC   2
+; #define TOTAL_FRAMES   (SAMPLE_RATE * DURATION_SEC) // 88200 frames
+; #define TOTAL_PCM_DATA (TOTAL_FRAMES * 4)           // 2 channels * 16-bit = 4 bytes/frame
+;
+; int main(void) {
+;     int16_t pcm_buffer[TOTAL_FRAMES * 2]; // interleaved [L0, R0, L1, R1, ...]
+;
+;     for (int i = 0; i < TOTAL_FRAMES; i++) {
+;         // Calculate linear decay envelope
+;         int amp = 16000 * (TOTAL_FRAMES - i) / TOTAL_FRAMES;
+;
+;         // Channel 1 (Left): ~441 Hz square wave (period = 100 samples)
+;         int16_t left = ((i % 100) < 50) ? (int16_t)amp : (int16_t)(-amp);
+;
+;         // Channel 2 (Right): ~658 Hz perfect fifth harmony (period = 67 samples)
+;         int16_t right = ((i % 67) < 33) ? (int16_t)amp : (int16_t)(-amp);
+;
+;         pcm_buffer[i * 2 + 0] = left;
+;         pcm_buffer[i * 2 + 1] = right;
+;     }
+;
+;     // Write standard RIFF/WAVE header followed by PCM audio data
+;     int fd = open("output.wav", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+;     write(fd, &wav_header, 44);
+;     write(fd, pcm_buffer, TOTAL_PCM_DATA);
+;     close(fd);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data

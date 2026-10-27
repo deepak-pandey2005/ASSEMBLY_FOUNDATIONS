@@ -3,6 +3,61 @@
 ; Description: Fully playable terminal Snake game in pure x86-64 Linux assembly
 ; Assembler: NASM (Intel syntax)
 ; Linker: GNU ld (no libc)
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <termios.h>
+; #include <unistd.h>
+; #include <time.h>
+; #include <stdlib.h>
+; #include <stdbool.h>
+;
+; #define BOARD_W 40
+; #define BOARD_H 20
+;
+; typedef struct { int x, y; } Point;
+; static Point snake[400];
+; static int snake_len = 4;
+; static int dir_x = 1, dir_y = 0;
+; static Point food = { 20, 10 };
+; static int score = 0;
+; static bool game_over = false;
+;
+; int main(void) {
+;     // 1. Enter terminal raw mode (disable canonical buffer and echo)
+;     struct termios orig_t, raw_t;
+;     tcgetattr(0, &orig_t);
+;     raw_t = orig_t;
+;     raw_t.c_lflag &= ~(ICANON | ECHO);
+;     tcsetattr(0, TCSANOW, &raw_t);
+;
+;     // 2. Hide cursor and clear terminal
+;     write(1, "\033[2J\033[H\033[?25l", 14);
+;
+;     // Initialize snake body
+;     for (int i = 0; i < snake_len; i++) {
+;         snake[i].x = 10 - i; snake[i].y = 10;
+;     }
+;
+;     struct timespec frame_delay = { .tv_sec = 0, .tv_nsec = 80000000 }; // 80ms
+;
+;     while (!game_over) {
+;         // 3. Render board, snake, and food via ANSI escapes
+;         // 4. Non-blocking input read (W/A/S/D/Q)
+;         // 5. Shift snake segments: snake[i] = snake[i-1]
+;         // 6. Update head: snake[0].x += dir_x; snake[0].y += dir_y;
+;         // 7. Check collisions (walls: 0..BOARD_W, 0..BOARD_H; self-collision)
+;         // 8. Check food eaten: score += 10, snake_len++, spawn_new_food()
+;         nanosleep(&frame_delay, NULL);
+;     }
+;
+;     // Restore terminal settings and exit
+;     tcsetattr(0, TCSANOW, &orig_t);
+;     write(1, "\033[?25h\033[0m\n", 9);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data
