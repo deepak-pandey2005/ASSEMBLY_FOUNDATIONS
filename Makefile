@@ -71,7 +71,8 @@ PROGRAMS := \
 	futex_mutex \
 	inotify_watcher \
 	perf_counters \
-	io_uring_demo
+	io_uring_demo \
+	spsc_ring
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -400,6 +401,12 @@ $(OBJ_DIR)/io_uring_demo.o: tutorials/38_linux_io_uring_async_io/io_uring_demo.a
 io_uring_demo: $(OBJ_DIR)/io_uring_demo.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/spsc_ring.o: tutorials/39_lockfree_spsc_ring_buffer/spsc_ring.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+spsc_ring: $(OBJ_DIR)/spsc_ring.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -466,8 +473,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/perf_counters
 	@echo "=== Testing Modern Linux io_uring Asynchronous I/O ==="
 	./$(BIN_DIR)/io_uring_demo
+	@echo "=== Testing Lock-Free SPSC Ring Buffer Concurrency ==="
+	./$(BIN_DIR)/spsc_ring
 	@echo "=========================================================="
-	@echo " ALL 38 MODULES & 11 STANDALONE PROJECTS PASSED PERFECTLY!"
+	@echo " ALL 39 MODULES & 11 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server

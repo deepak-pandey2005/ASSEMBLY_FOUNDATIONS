@@ -6,13 +6,13 @@
 
 ## 🚀 Quick Start
 
-Build and test all 38 guided modules and 11 standalone projects with a single command:
+Build and test all 39 guided modules and 11 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 38 tutorial programs and 11 standalone projects
+# Build all 39 tutorial programs and 11 standalone projects
 make all
 
 # Run the automated verification test suite across everything
@@ -179,7 +179,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 35_linux_futex_low_latency_mutex/  # Fast userspace mutex (sys_futex), atomic fast-path
 │   ├── 36_inotify_file_system_watcher/    # Linux inotify file monitoring & binary struct parsing
 │   ├── 37_kernel_hardware_performance_counters/ # CPU PMU cycles, instructions retired & IPC
-│   └── 38_linux_io_uring_async_io/        # Modern Linux io_uring asynchronous I/O subsystem
+│   ├── 38_linux_io_uring_async_io/        # Modern Linux io_uring asynchronous I/O subsystem
+│   └── 39_lockfree_spsc_ring_buffer/      # Zero-mutex lock-free SPSC circular ring buffer queue
 ├── gas/                                   # Legacy GNU Assembler snippets
 └── X86_ASSEMBLY/                          # Legacy 32-bit x86 experimental snippets
 ```

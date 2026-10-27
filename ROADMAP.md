@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **38 progressive modules** and **11 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), RFC 1035 UDP DNS resolution, modern Linux `io_uring` asynchronous I/O, and POSIX `tar` archive serialization.
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **39 progressive modules** and **11 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), RFC 1035 UDP DNS resolution, modern Linux `io_uring` asynchronous I/O, POSIX `tar` archive serialization, and lock-free SPSC circular ring buffers.
 
 ---
 
@@ -69,6 +69,7 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **36** | [Linux Kernel Inotify File-System Watcher](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/36_inotify_file_system_watcher/README.md) | OS Event Subsystem | `sys_inotify_init1` (294), `sys_inotify_add_watch` (254), `IN_CREATE`, binary `struct inotify_event` parsing | [`inotify_watcher.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/36_inotify_file_system_watcher/inotify_watcher.asm) |
 | **37** | [Linux Kernel Hardware Performance Counters](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/37_kernel_hardware_performance_counters/README.md) | Hardware PMU Subsystem | `sys_perf_event_open` (298), hardware CPU cycles, instructions retired, Instructions-Per-Cycle (IPC), `sys_ioctl` control | [`perf_counters.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/37_kernel_hardware_performance_counters/perf_counters.asm) |
 | **38** | [Modern Linux `io_uring` Asynchronous I/O](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/38_linux_io_uring_async_io/README.md) | High-Performance Async I/O | `sys_io_uring_setup` (425), `sys_io_uring_enter` (426), memory-mapped SQ/CQ rings, `IORING_OP_NOP`, async `IORING_OP_WRITE` | [`io_uring_demo.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/38_linux_io_uring_async_io/io_uring_demo.asm) |
+| **39** | [Lock-Free SPSC Ring Buffer Concurrency](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/39_lockfree_spsc_ring_buffer/README.md) | Lock-Free Concurrency | Zero-mutex SPSC circular queue, `align 64` false sharing prevention, x86-64 TSO memory ordering, `pause` hint | [`spsc_ring.asm`](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/tutorials/39_lockfree_spsc_ring_buffer/spsc_ring.asm) |
 
 ---
 
@@ -93,7 +94,7 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 38 tutorial programs and 11 standalone projects
+make all          # Compiles and links all 39 tutorial programs and 11 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost
