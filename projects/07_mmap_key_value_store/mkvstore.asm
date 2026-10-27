@@ -18,6 +18,47 @@
 ;     ./mkvstore set <key> <val>
 ;     ./mkvstore get <key>
 ;     ./mkvstore dump
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <sys/mman.h>
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <string.h>
+; #include <stdint.h>
+;
+; typedef struct {
+;     uint8_t status;     // 0x00 = empty, 0x01 = active
+;     char key[31];       // null-padded key
+;     char value[32];     // null-padded value
+; } kv_slot_t;
+;
+; typedef struct {
+;     uint32_t magic;     // "SMKV" (0x564B4D53)
+;     uint32_t version;   // 1
+;     uint64_t max_slots; // 64
+;     kv_slot_t slots[64];// 64 * 64 = 4096 bytes
+; } mkv_db_t;
+;
+; int main(int argc, char **argv) {
+;     int fd = open("data.mkv", O_RDWR | O_CREAT, 0644);
+;     ftruncate(fd, sizeof(mkv_db_t));
+;     mkv_db_t *db = mmap(NULL, sizeof(mkv_db_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+;
+;     if (strcmp(argv[1], "set") == 0) {
+;         // Locate empty or matching slot, copy key/value, set status = 1
+;         msync(db, sizeof(mkv_db_t), MS_SYNC);
+;     } else if (strcmp(argv[1], "get") == 0) {
+;         // Scan active slots for key, print matching value
+;     } else if (strcmp(argv[1], "dump") == 0) {
+;         // Print all active key-value pairs
+;     }
+;     munmap(db, sizeof(mkv_db_t));
+;     close(fd);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 global _start

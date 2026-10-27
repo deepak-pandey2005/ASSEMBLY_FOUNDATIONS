@@ -9,6 +9,41 @@
 ; - Message schedule expansion: W[0..63]
 ; - 64 compression rounds using Ch, Maj, Sigma0, Sigma1
 ; - Hexadecimal digest output formatter
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <unistd.h>
+; #include <stdint.h>
+; #include <string.h>
+;
+; // NIST FIPS 180-4 SHA-256 standard constants
+; static const uint32_t K[64] = { ... };
+; static const uint32_t H_INIT[8] = {
+;     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+;     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+; };
+;
+; void sha256_process_block(uint32_t state[8], const uint8_t block[64]) {
+;     uint32_t W[64];
+;     for (int i = 0; i < 16; i++) {
+;         W[i] = (block[i*4] << 24) | (block[i*4+1] << 16) | (block[i*4+2] << 8) | block[i*4+3];
+;     }
+;     for (int i = 16; i < 64; i++) {
+;         W[i] = Gamma1(W[i-2]) + W[i-7] + Gamma0(W[i-15]) + W[i-16];
+;     }
+;     uint32_t a = state[0], b = state[1], c = state[2], d = state[3];
+;     uint32_t e = state[4], f = state[5], g = state[6], h = state[7];
+;     for (int i = 0; i < 64; i++) {
+;         uint32_t T1 = h + Sigma1(e) + Ch(e, f, g) + K[i] + W[i];
+;         uint32_t T2 = Sigma0(a) + Maj(a, b, c);
+;         h = g; g = f; f = e; e = d + T1;
+;         d = c; c = b; b = a; a = T1 + T2;
+;     }
+;     state[0] += a; state[1] += b; state[2] += c; state[3] += d;
+;     state[4] += e; state[5] += f; state[6] += g; state[7] += h;
+; }
 ; ==============================================================================
 
 global _start

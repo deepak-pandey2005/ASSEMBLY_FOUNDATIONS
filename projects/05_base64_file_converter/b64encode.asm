@@ -3,6 +3,46 @@
 ; Description: Streaming Base64 file converter CLI in pure x86-64 assembly
 ; Architecture: x86-64 Linux
 ; Assembler: NASM
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <fcntl.h>
+; #include <unistd.h>
+; #include <stdint.h>
+;
+; static const char b64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+;
+; int main(void) {
+;     int in_fd = open("input.bin", O_RDONLY);
+;     int out_fd = open("output.b64", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+;
+;     uint8_t in_buf[3072];
+;     uint8_t out_buf[4096];
+;     ssize_t n;
+;
+;     while ((n = read(in_fd, in_buf, sizeof(in_buf))) > 0) {
+;         size_t out_len = 0;
+;         for (size_t i = 0; i < n; i += 3) {
+;             // Pack up to 3 bytes into 24-bit integer
+;             uint32_t b0 = in_buf[i];
+;             uint32_t b1 = (i + 1 < n) ? in_buf[i + 1] : 0;
+;             uint32_t b2 = (i + 2 < n) ? in_buf[i + 2] : 0;
+;             uint32_t triple = (b0 << 16) | (b1 << 8) | b2;
+;
+;             // Unpack into four 6-bit Base64 indices
+;             out_buf[out_len++] = b64[(triple >> 18) & 0x3F];
+;             out_buf[out_len++] = b64[(triple >> 12) & 0x3F];
+;             out_buf[out_len++] = (i + 1 < n) ? b64[(triple >> 6) & 0x3F] : '=';
+;             out_buf[out_len++] = (i + 2 < n) ? b64[triple & 0x3F] : '=';
+;         }
+;         write(out_fd, out_buf, out_len);
+;     }
+;     close(in_fd);
+;     close(out_fd);
+;     _exit(0);
+; }
 ; ==============================================================================
 
 section .data

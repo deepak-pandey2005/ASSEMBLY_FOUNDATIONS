@@ -11,6 +11,39 @@
 ;     json_extract_string(val_ptr, out_buf, max_len)
 ;     json_parse_int(val_ptr) -> rax (integer)
 ; - Standalone CLI: Reads JSON from stdin and queries standard fields
+
+;
+; ==============================================================================
+; Equivalent C Code:
+; ------------------------------------------------------------------------------
+; #include <unistd.h>
+; #include <string.h>
+; #include <stdint.h>
+; #include <stdbool.h>
+;
+; // Search JSON string for a specific object key and return pointer to its value token
+; const char *json_find_key(const char *json, const char *key) {
+;     size_t key_len = strlen(key);
+;     const char *p = json;
+;     while (*p) {
+;         if (*p == '"' && strncmp(p + 1, key, key_len) == 0 && p[key_len + 1] == '"') {
+;             p += key_len + 2;
+;             while (*p == ' ' || *p == '\t' || *p == '\n' || *p == ':') p++;
+;             return p; // pointer to value
+;         }
+;         p++;
+;     }
+;     return NULL;
+; }
+;
+; int64_t json_parse_int(const char *val_ptr) {
+;     int64_t result = 0;
+;     while (*val_ptr >= '0' && *val_ptr <= '9') {
+;         result = result * 10 + (*val_ptr - '0');
+;         val_ptr++;
+;     }
+;     return result;
+; }
 ; ==============================================================================
 
 global _start
