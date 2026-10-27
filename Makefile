@@ -110,27 +110,8 @@ projects:
 	done
 
 test-projects:
-	@echo "=== Testing Standalone Project 02: HTTP Server Daemon ==="
-	@$(MAKE) -C projects/02_http_server_daemon test
-	@echo "=== Testing Standalone Project 03: WAV Synthesizer ==="
-	@$(MAKE) -C projects/03_wav_audio_generator run
-	@echo "=== Testing Standalone Project 04: 3D Raytracer ==="
-	@$(MAKE) -C projects/04_raytracer_ppm run
-	@echo "=== Testing Standalone Project 05: Base64 File Converter ==="
-	@$(MAKE) -C projects/05_base64_file_converter test
-	@echo "=== Testing Standalone Project 06: SHA-256 Hasher CLI ==="
-	@$(MAKE) -C projects/06_sha256_hasher test
-	@echo "=== Testing Standalone Project 07: Memory-Mapped Key-Value Store ==="
-	@$(MAKE) -C projects/07_mmap_key_value_store test
-	@echo "=== Testing Standalone Project 08: JSON Lexer & Parser ==="
-	@$(MAKE) -C projects/08_json_parser test
-	@echo "=== Testing Standalone Project 09: CHIP-8 Virtual Machine & Emulator ==="
-	@$(MAKE) -C projects/09_chip8_emulator test
-	@echo "=== Testing Standalone Project 11: POSIX tar Archiver & Extractor ==="
-	@$(MAKE) -C projects/11_tar_archiver test
-	@echo "=== Testing Standalone Project 12: Pure Assembly Brainfuck JIT Compiler ==="
-	@$(MAKE) -C projects/12_brainfuck_jit test
-	@echo "[+] All standalone projects verified successfully!"
+	@projects/test_all_projects.sh
+
 
 # ------------------------------------------------------------------------------
 # Modules 01 - 08 (Core Foundations)

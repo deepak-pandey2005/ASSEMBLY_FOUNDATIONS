@@ -24,7 +24,10 @@ $(TARGET): $(OBJ)
 
 test: $(TARGET)
 	@echo "Executing CHIP-8 Emulator with built-in font rendering ROM..."
-	@./$(TARGET)
+	@OUT=$$(./$(TARGET)); \
+	echo "$$OUT"; \
+	echo "$$OUT" | grep -q "CHIP-8 CPU execution cycle & framebuffer render verified successfully!" || exit 1; \
+	echo "[+] Standalone Project 09 (CHIP-8 Emulator) Test PASSED!"
 
 run: test
 

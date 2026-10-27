@@ -24,17 +24,18 @@ $(TARGET): $(OBJ)
 	@echo "=========================================================="
 
 test: $(TARGET)
-	@echo "Testing SHA-256 with standard NIST test vector 'abc'..."
+	@echo "Testing SHA-256 with NIST test vectors..."
+	@echo "[*] Test 1: Vector 'abc'"
 	@HASH=$$(printf "abc" | ./$(TARGET) | grep "SHA-256:" | awk '{print $$3}'); \
 	EXPECTED="ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"; \
-	echo "[+] Output:   $$HASH"; \
-	echo "[+] Expected: $$EXPECTED"; \
-	if [ "$$HASH" = "$$EXPECTED" ]; then \
-		echo "[+] NIST Standard 'abc' SHA-256 Test PASSED!"; \
-	else \
-		echo "[-] NIST Test FAILED!"; \
-		exit 1; \
-	fi
+	echo "    -> Output:   $$HASH"; \
+	if [ "$$HASH" = "$$EXPECTED" ]; then echo "    [+] PASSED!"; else echo "    [-] FAILED!"; exit 1; fi
+	@echo "[*] Test 2: Vector 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'"
+	@HASH2=$$(printf "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq" | ./$(TARGET) | grep "SHA-256:" | awk '{print $$3}'); \
+	EXPECTED2="248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"; \
+	echo "    -> Output:   $$HASH2"; \
+	if [ "$$HASH2" = "$$EXPECTED2" ]; then echo "    [+] PASSED!"; else echo "    [-] FAILED!"; exit 1; fi
+	@echo "[+] Standalone Project 06 (SHA-256 Hasher) All NIST Tests PASSED!"
 
 run: test
 

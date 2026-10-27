@@ -36,7 +36,16 @@ test: $(TARGET)
 		echo "[-] Expected 'root', got '$$VAL'"; \
 		exit 1; \
 	fi
-	@echo "[*] Step 4: Dumping database contents..."
+	@echo "[*] Step 4: Overwriting key 'port' => '9090'..."
+	@./$(TARGET) set port 9090
+	@VAL2=$$(./$(TARGET) get port); \
+	if [ "$$VAL2" = "9090" ]; then \
+		echo "[+] Key 'port' overwrite verified: $$VAL2"; \
+	else \
+		echo "[-] Expected '9090', got '$$VAL2'"; \
+		exit 1; \
+	fi
+	@echo "[*] Step 5: Dumping database contents..."
 	@./$(TARGET) dump
 	@echo "[+] Standalone Project 07 (mkvstore) Test PASSED!"
 

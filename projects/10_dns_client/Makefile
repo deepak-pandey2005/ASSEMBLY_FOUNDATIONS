@@ -24,9 +24,13 @@ $(TARGET): $(OBJ)
 
 test: $(TARGET)
 	@echo "Testing DNS Resolution for google.com..."
-	./$(TARGET) google.com
+	@OUT=$$(./$(TARGET) google.com); \
+	echo "$$OUT"; \
+	echo "$$OUT" | grep -q "RFC 1035 DNS Client resolution verified successfully!" || exit 1; \
+	echo "[+] Standalone Project 10 (RFC 1035 DNS Client) Test PASSED!"
 
-run: test
+run: $(TARGET)
+	./$(TARGET) google.com
 
 clean:
 	rm -f $(OBJ) $(TARGET)

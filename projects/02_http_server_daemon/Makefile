@@ -23,16 +23,38 @@ $(TARGET): $(OBJ)
 	@echo "=========================================================="
 
 run: $(TARGET)
+	@echo "Starting HTTP Server Daemon on http://127.0.0.1:8080 (Press Ctrl+C to stop)..."
+	@echo "Tip: Run 'make test' to execute automated endpoint tests without blocking."
 	./$(TARGET)
 
 test: $(TARGET)
 	@echo "Testing HTTP Daemon endpoints..."
 	@./$(TARGET) & PID=$$!; \
 	sleep 0.5; \
-	curl -s http://127.0.0.1:8080/api/status; echo ""; \
-	curl -s http://127.0.0.1:8080/; echo ""; \
+	API_RESP=$$(curl -s http://127.0.0.1:8080/api/status); \
+	HTML_RESP=$$(curl -s http://127.0.0.1:8080/); \
+	ERR_RESP=$$(curl -s http://127.0.0.1:8080/nonexistent); \
 	kill $$PID 2>/dev/null || true; \
-	echo "[+] HTTP Daemon test passed!"
+	echo "[*] GET /api/status response: $$API_RESP"; \
+	if echo "$$API_RESP" | grep -q '"status":"online"'; then \
+		echo "[+] /api/status JSON endpoint verified!"; \
+	else \
+		echo "[-] /api/status verification failed!"; \
+		exit 1; \
+	fi; \
+	if echo "$$HTML_RESP" | grep -q "Assembly Foundations HTTP Server Daemon"; then \
+		echo "[+] Root '/' HTML endpoint verified!"; \
+	else \
+		echo "[-] Root endpoint verification failed!"; \
+		exit 1; \
+	fi; \
+	if echo "$$ERR_RESP" | grep -q "404 Not Found"; then \
+		echo "[+] 404 handler verified!"; \
+	else \
+		echo "[-] 404 handler verification failed!"; \
+		exit 1; \
+	fi; \
+	echo "[+] HTTP Daemon test passed successfully!"
 
 clean:
 	rm -f $(OBJ) $(TARGET)

@@ -23,10 +23,20 @@ $(TARGET): $(OBJ)
 	@echo "=========================================================="
 
 test: $(TARGET)
-	@echo "Assembly Foundations Project" > input.bin
+	@echo "Testing Base64 File Converter with standard payload..."
+	@printf "Assembly Foundations Pure x86-64 Linux Machine Code" > input.bin
 	@./$(TARGET)
-	@echo "Encoded output content:"
-	@cat output.b64
+	@ENCODED=$$(cat output.b64); \
+	EXPECTED=$$(base64 -w 0 input.bin); \
+	echo "[+] Output:   $$ENCODED"; \
+	echo "[+] Expected: $$EXPECTED"; \
+	if [ "$$ENCODED" = "$$EXPECTED" ]; then \
+		echo "[+] Base64 bit-exact verification with GNU coreutils PASSED!"; \
+	else \
+		echo "[-] Verification FAILED!"; \
+		exit 1; \
+	fi
+	@rm -f input.bin output.b64
 
 run: test
 

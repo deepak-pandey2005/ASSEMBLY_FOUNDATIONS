@@ -23,8 +23,14 @@ $(TARGET): $(OBJ)
 	@echo "=========================================================="
 
 test: $(TARGET)
-	@echo "Testing JSON Parser with piped custom JSON payload..."
-	@printf '{"name":"x86-64_Assembly","version":2026,"author":"deepak","active":true}' | ./$(TARGET)
+	@echo "Testing JSON Lexer & Parser with structured JSON payload..."
+	@OUT=$$(printf '{"name":"Assembly Foundations","version":2026,"author":"deepak","active":true}' | ./$(TARGET)); \
+	echo "$$OUT"; \
+	echo "$$OUT" | grep -q "Found key 'name'    => 'Assembly Foundations'" || exit 1; \
+	echo "$$OUT" | grep -q "Found key 'version' => 2026" || exit 1; \
+	echo "$$OUT" | grep -q "Found key 'author'  => 'deepak'" || exit 1; \
+	echo "$$OUT" | grep -q "Found key 'active'  => true" || exit 1; \
+	echo "[+] Standalone Project 08 (JSON Lexer & Parser) Assertions PASSED!"
 
 run: test
 
