@@ -6,13 +6,13 @@
 
 ## 🚀 Quick Start
 
-Build and test all 40 guided modules and 11 standalone projects with a single command:
+Build and test all 40 guided modules and 12 standalone projects with a single command:
 
 ```bash
 # Clone and enter the workspace
 cd ASSEMBLY_FOUNDATIONS
 
-# Build all 40 tutorial programs and 11 standalone projects
+# Build all 40 tutorial programs and 12 standalone projects
 make all
 
 # Run the automated verification test suite across everything
@@ -140,7 +140,8 @@ ASSEMBLY_FOUNDATIONS/
 │   ├── 08_json_parser/                    # Streaming RFC 8259-compliant JSON tokenizer & AST parser
 │   ├── 09_chip8_emulator/                 # Complete CHIP-8 virtual machine & CPU interpreter
 │   ├── 10_dns_client/                     # RFC 1035 UDP DNS resolver CLI (8.8.8.8) & packet decoder
-│   └── 11_tar_archiver/                   # POSIX ustar tar archive creator & extractor CLI
+│   ├── 11_tar_archiver/                   # POSIX ustar tar archive creator & extractor CLI
+│   └── 12_brainfuck_jit/                  # Dynamic x86-64 machine code JIT compiler & optimizer
 ├── tutorials/
 │   ├── 01_fundamentals/                   # CPU execution cycle, minimal exit, hello world
 │   ├── 02_registers_and_memory/           # Addressing modes, .data, .bss, .rodata

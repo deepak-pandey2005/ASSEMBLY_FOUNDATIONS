@@ -1,6 +1,6 @@
 # Assembly Foundations: Complete Roadmap & Curriculum
 
-Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **40 progressive modules** and **11 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), RFC 1035 UDP DNS resolution, modern Linux `io_uring` asynchronous I/O, POSIX `tar` archive serialization, lock-free SPSC circular ring buffers, and anonymous in-memory binary execution (`sys_memfd_create` and `sys_execveat`).
+Welcome to **Assembly Foundations**! This roadmap bridges high-level software engineering and bare-metal machine execution. It takes you across **40 progressive modules** and **12 standalone real-world projects** from basic arithmetic and CPU registers to operating system internals, raw socket networking, pixel rendering, data serialization, AVX2 vectorization, hardware atomics, FFI interop, binary security, hardware telemetry, signals, x87 FPU math, terminal UI, minimal ELF golfing, kernel high-resolution timers, high-concurrency event-driven `epoll` architecture, Linux Seccomp syscall sandboxing, raw `sys_clone` multithreading, hardware virtualization detection, custom heap allocation, persistent memory-mapped databases, hardware port I/O, Linux futex low-latency mutexes, streaming JSON parsing, kernel inotify file monitoring, pure assembly CHIP-8 CPU emulation, kernel hardware performance monitoring counters (`perf_event_open`), RFC 1035 UDP DNS resolution, modern Linux `io_uring` asynchronous I/O, POSIX `tar` archive serialization, lock-free SPSC circular ring buffers, anonymous in-memory binary execution (`sys_memfd_create` and `sys_execveat`), and pure assembly dynamic JIT compilers (`sys_mmap` RWX code generation).
 
 ---
 
@@ -89,13 +89,14 @@ Welcome to **Assembly Foundations**! This roadmap bridges high-level software en
 | **09** | [CHIP-8 Virtual Machine](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/09_chip8_emulator/README.md) | Virtualization & Emulation | Full 4KB RAM, 16 registers, font sprites, 64x32 display rendering, opcode decoder & runner |
 | **10** | [RFC 1035 DNS Resolver](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/10_dns_client/README.md) | Internet Protocols | Raw UDP sockets (`SOCK_DGRAM`), binary DNS header/QNAME encoding, compression pointer parsing, IPv4 address resolution |
 | **11** | [POSIX tar Archiver & Extractor](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/11_tar_archiver/README.md) | Archive Systems | POSIX ustar 512-byte block format, header checksum calculation, octal serialization, GNU tar interoperability |
+| **12** | [Brainfuck JIT Compiler](file:///home/deepak/OPENSOURCE/ASSEMBLY_FOUNDATIONS/projects/12_brainfuck_jit/README.md) | JIT Compilers & Virtual Machines | Dynamic x86-64 machine code generation, run-length coalescing, zero-cell peephole optimization, RDTSC telemetry |
 
 ---
 
 ## 🛠️ Automated Testing & Build
 
 ```bash
-make all          # Compiles and links all 40 tutorial programs and 11 standalone projects
+make all          # Compiles and links all 40 tutorial programs and 12 standalone projects
 make test         # Runs automated unit tests for all modules and projects
 make test-epoll   # Tests the asynchronous epoll event-driven server
 make test-network # Boots pure assembly HTTP server and curls it via localhost

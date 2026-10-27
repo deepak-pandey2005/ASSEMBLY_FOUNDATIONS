@@ -86,13 +86,14 @@ PROJECT_DIRS := \
 	projects/08_json_parser \
 	projects/09_chip8_emulator \
 	projects/10_dns_client \
-	projects/11_tar_archiver
+	projects/11_tar_archiver \
+	projects/12_brainfuck_jit
 
 .PHONY: all clean help test test-network test-epoll test-ffi projects test-projects
 
 all: $(PROGRAMS) projects
 	@echo "=========================================================="
-	@echo " All 30 Tutorials & 5 Projects Built Successfully!       "
+	@echo " All 40 Tutorials & 12 Projects Built Successfully!       "
 	@echo "=========================================================="
 
 $(BIN_DIR) $(OBJ_DIR):
@@ -124,6 +125,10 @@ test-projects:
 	@$(MAKE) -C projects/08_json_parser test
 	@echo "=== Testing Standalone Project 09: CHIP-8 Virtual Machine & Emulator ==="
 	@$(MAKE) -C projects/09_chip8_emulator test
+	@echo "=== Testing Standalone Project 11: POSIX tar Archiver & Extractor ==="
+	@$(MAKE) -C projects/11_tar_archiver test
+	@echo "=== Testing Standalone Project 12: Pure Assembly Brainfuck JIT Compiler ==="
+	@$(MAKE) -C projects/12_brainfuck_jit test
 	@echo "[+] All standalone projects verified successfully!"
 
 # ------------------------------------------------------------------------------
@@ -485,7 +490,7 @@ test: all test-projects test-epoll
 	@echo "=== Testing Anonymous Memory Execution (memfd_create & execveat) ==="
 	./$(BIN_DIR)/memfd_exec
 	@echo "=========================================================="
-	@echo " ALL 40 MODULES & 11 STANDALONE PROJECTS PASSED PERFECTLY!"
+	@echo " ALL 40 MODULES & 12 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server
@@ -516,7 +521,7 @@ clean:
 
 help:
 	@echo "Assembly Foundations Build Targets:"
-	@echo "  make all          - Build all 40 modules and 11 standalone projects"
+	@echo "  make all          - Build all 40 modules and 12 standalone projects"
 	@echo "  make test         - Run full test suite verifying tutorials and projects"
 	@echo "  make test-epoll   - Run epoll async TCP echo test"
 	@echo "  make test-network - Run pure assembly HTTP web server test"
