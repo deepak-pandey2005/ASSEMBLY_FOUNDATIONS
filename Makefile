@@ -73,7 +73,8 @@ PROGRAMS := \
 	perf_counters \
 	io_uring_demo \
 	spsc_ring \
-	memfd_exec
+	memfd_exec \
+	ptrace_tracer
 
 PROJECT_DIRS := \
 	projects/01_interactive_snake_game \
@@ -419,6 +420,12 @@ $(OBJ_DIR)/memfd_exec.o: tutorials/40_anonymous_memfd_execution/memfd_exec.asm |
 memfd_exec: $(OBJ_DIR)/memfd_exec.o | $(BIN_DIR)
 	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
 
+$(OBJ_DIR)/ptrace_tracer.o: tutorials/41_linux_ptrace_process_tracer/ptrace_tracer.asm | $(OBJ_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
+ptrace_tracer: $(OBJ_DIR)/ptrace_tracer.o | $(BIN_DIR)
+	$(LD) $(LDFLAGS) $< -o $(BIN_DIR)/$@
+
 # ------------------------------------------------------------------------------
 # Testing and Verification
 # ------------------------------------------------------------------------------
@@ -489,8 +496,10 @@ test: all test-projects test-epoll
 	./$(BIN_DIR)/spsc_ring
 	@echo "=== Testing Anonymous Memory Execution (memfd_create & execveat) ==="
 	./$(BIN_DIR)/memfd_exec
+	@echo "=== Testing Linux Process Tracing & Syscall Interception (sys_ptrace) ==="
+	./$(BIN_DIR)/ptrace_tracer
 	@echo "=========================================================="
-	@echo " ALL 40 MODULES & 12 STANDALONE PROJECTS PASSED PERFECTLY!"
+	@echo " ALL 41 MODULES & 12 STANDALONE PROJECTS PASSED PERFECTLY!"
 	@echo "=========================================================="
 
 test-epoll: epoll_server
@@ -521,7 +530,7 @@ clean:
 
 help:
 	@echo "Assembly Foundations Build Targets:"
-	@echo "  make all          - Build all 40 modules and 12 standalone projects"
+	@echo "  make all          - Build all 41 modules and 12 standalone projects"
 	@echo "  make test         - Run full test suite verifying tutorials and projects"
 	@echo "  make test-epoll   - Run epoll async TCP echo test"
 	@echo "  make test-network - Run pure assembly HTTP web server test"
